@@ -201,6 +201,7 @@ Environment variables:
 - [x] Load seller profile and display-name welcome
 - [x] Display status summary counts
 - [x] Empty and database-error states
+- [x] Verify profile welcome, zero counts, empty state, and logout in production
 - [ ] Active listings section
 - [ ] Draft listings section
 - [ ] Sold listings section
@@ -654,7 +655,7 @@ Phase 0 — Foundation                 ██████████ 100%
 Phase 1 — Public V1                 ██████████ 100%
 Phase 2 — Infrastructure            ██████████ 100%
 Phase 3 — Seller Authentication     ██████████ 100%
-Phase 4 — Seller Dashboard          ██░░░░░░░░  20%  ← CURRENT
+Phase 4 — Seller Dashboard          ███░░░░░░░  30%  ← CURRENT
 Phase 5 — Structured Listing Form   ░░░░░░░░░░   0%
 Phase 6 — Images                    ░░░░░░░░░░   0%
 Phase 7 — Database Inventory        ░░░░░░░░░░   0%
@@ -716,6 +717,7 @@ Seller Dashboard Foundation now includes:
 - Lightweight listing cards
 - Empty and database-error states
 - Responsive Cyberelay styling
+- Production verification of profile welcome, zero counts, empty state, and logout
 
 Next implementation target:
 
