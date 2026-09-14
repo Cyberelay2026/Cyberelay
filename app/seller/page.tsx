@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
 import styles from "./dashboard.module.css";
@@ -19,16 +20,16 @@ function textValue(value: unknown) {
 }
 
 function formatPrice(row: DatabaseRow) {
-  const value =
-    row.current_asking_price ?? row.current_price ?? row.asking_price ?? row.price;
-  const price = typeof value === "number" ? value : Number(value);
-
-  if (!Number.isFinite(price)) return "Price unavailable";
+  const cents =
+    typeof row.price_cents === "number"
+      ? row.price_cents
+      : Number(row.price_cents);
+  if (!Number.isFinite(cents)) return "Price unavailable";
   return new Intl.NumberFormat("en-CA", {
     style: "currency",
     currency: "CAD",
-    maximumFractionDigits: price % 1 === 0 ? 0 : 2,
-  }).format(price);
+    maximumFractionDigits: 2,
+  }).format(cents / 100);
 }
 
 function formatDate(value: unknown) {
@@ -55,7 +56,8 @@ function normalizedStatus(value: unknown): ListingStatus | null {
   return listingStatuses.find(([status]) => status === value)?.[0] ?? null;
 }
 
-export default async function SellerPage() {
+export default async function SellerPage({ searchParams }: { searchParams: Promise<{ created?: string }> }) {
+  const query = await searchParams;
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getClaims();
   const userId = authData?.claims?.sub;
@@ -64,10 +66,14 @@ export default async function SellerPage() {
 
   const [{ data: profile }, { data: listingData, error: listingsError }] =
     await Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+      supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", userId)
+        .maybeSingle(),
       supabase
         .from("listings")
-        .select("*")
+        .select("id,title,price_cents,status,created_at,updated_at,city,province")
         .eq("seller_id", userId)
         .order("updated_at", { ascending: false }),
     ]);
@@ -99,13 +105,9 @@ export default async function SellerPage() {
             <p>Manage your Cyberelay computer listings from one place.</p>
           </div>
           <div className={styles.headerActions}>
-            <span
-              aria-disabled="true"
-              className={`${styles.disabledCta} button`}
-              title="Listing creation is coming in the next milestone"
-            >
+            <Link className="button" href="/seller/listings/new">
               Add Computer
-            </span>
+            </Link>
             <form action={logout}>
               <button className="button button-outline" type="submit">
                 Log out
@@ -113,6 +115,8 @@ export default async function SellerPage() {
             </form>
           </div>
         </header>
+
+        {query.created === "1" && <div className={styles.successNotice} role="status">Draft saved successfully.</div>}
 
         <section aria-labelledby="listing-summary-heading">
           <div className={styles.sectionTitle}>
@@ -148,11 +152,9 @@ export default async function SellerPage() {
               <span className="eyebrow">NO LISTINGS YET</span>
               <h3>You haven&apos;t listed any computers yet.</h3>
               <p>
-                Structured listing creation will be available in the next milestone.
+                Start with accurate specifications so buyers can understand your computer.
               </p>
-              <span aria-disabled="true" className={styles.emptyCta}>
-                Add Computer — coming soon
-              </span>
+              <Link className="button" href="/seller/listings/new">Add Computer</Link>
             </div>
           ) : (
             <div className={styles.listingGrid}>

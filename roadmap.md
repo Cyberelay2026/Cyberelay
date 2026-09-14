@@ -210,7 +210,7 @@ Environment variables:
 
 ## 4.2 Listing Management
 
-- [ ] Create listing
+- [x] Create private draft listing
 - [ ] Edit listing
 - [ ] Publish listing
 - [ ] Mark listing as sold
@@ -239,42 +239,42 @@ Supported lifecycle:
 
 Create controlled/standardized inputs for:
 
-- [ ] Brand
-- [ ] Model
-- [ ] CPU brand
-- [ ] CPU family
-- [ ] CPU model
-- [ ] RAM
-- [ ] Storage capacity
-- [ ] Storage type
-- [ ] GPU type
-- [ ] GPU brand
-- [ ] GPU model
-- [ ] Screen size
-- [ ] Resolution
-- [ ] Operating system
-- [ ] Condition
-- [ ] Battery health
-- [ ] Price
-- [ ] City
-- [ ] Province
-- [ ] Facebook Marketplace URL
-- [ ] Description
-- [ ] Cosmetic notes
+- [x] Brand
+- [x] Model
+- [x] CPU brand
+- [x] CPU family
+- [x] CPU model
+- [x] RAM
+- [x] Storage capacity
+- [x] Storage type
+- [x] GPU type
+- [x] GPU brand
+- [x] GPU model
+- [x] Screen size
+- [x] Resolution
+- [x] Operating system
+- [x] Condition
+- [x] Battery health
+- [x] Price
+- [x] City
+- [x] Province
+- [x] Facebook Marketplace URL
+- [x] Description
+- [x] Cosmetic notes
 
 ## 5.2 Validation
 
-- [ ] Controlled RAM values
-- [ ] Controlled storage values
-- [ ] Controlled storage types
-- [ ] Controlled condition values
-- [ ] CPU normalization
-- [ ] GPU normalization
-- [ ] Battery health 0–100 validation
-- [ ] Positive price validation
-- [ ] Facebook URL validation
-- [ ] Required-field validation
-- [ ] Server-side validation
+- [x] Controlled RAM values
+- [x] Controlled storage values
+- [x] Controlled storage types
+- [x] Controlled condition values
+- [x] CPU brand/family normalization
+- [x] GPU type/brand normalization
+- [x] Battery health 0–100 validation
+- [x] Positive price validation stored as integer cents
+- [x] Facebook Marketplace URL validation
+- [x] Required-field validation
+- [x] Server-side validation
 
 ## 5.3 Structured Data Rules
 
@@ -288,7 +288,7 @@ Examples:
 
 Seller-entered free text must not directly create filter values.
 
-**Status: ⬜ Planned**
+**Status: 🟡 Implementation complete — production draft/RLS verification pending**
 
 ---
 
@@ -655,8 +655,8 @@ Phase 0 — Foundation                 ██████████ 100%
 Phase 1 — Public V1                 ██████████ 100%
 Phase 2 — Infrastructure            ██████████ 100%
 Phase 3 — Seller Authentication     ██████████ 100%
-Phase 4 — Seller Dashboard          ███░░░░░░░  30%  ← CURRENT
-Phase 5 — Structured Listing Form   ░░░░░░░░░░   0%
+Phase 4 — Seller Dashboard          ████░░░░░░  40%  ← CURRENT
+Phase 5 — Structured Listing Form   █████████░  90%  ← VERIFY IN PRODUCTION
 Phase 6 — Images                    ░░░░░░░░░░   0%
 Phase 7 — Database Inventory        ░░░░░░░░░░   0%
 Phase 8 — Listing Freshness         ░░░░░░░░░░   0%
@@ -706,7 +706,7 @@ Potential Full Marketplace
 
 # Next Milestone
 
-## Structured Add Listing
+## Production Verification — Structured Add Listing
 
 Seller Dashboard Foundation now includes:
 
@@ -719,11 +719,22 @@ Seller Dashboard Foundation now includes:
 - Responsive Cyberelay styling
 - Production verification of profile welcome, zero counts, empty state, and logout
 
-Next implementation target:
+Structured Add Listing implementation now includes:
 
-- Build the structured Add Computer form
-- Validate controlled computer specifications on the server
-- Create seller-owned draft listings through existing RLS
-- Preserve the existing public website and demo inventory
+- Controlled computer specification inputs
+- Server-side validation and normalization
+- Integer-cent pricing with original-price preservation
+- Server-generated unique slug
+- Authenticated `seller_id` assignment
+- Private draft creation through existing RLS
+- Dashboard draft count and listing display
 
-**Continue Seller Dashboard with Structured Add Listing.**
+Before Edit / Publish / Mark Sold, verify in production:
+
+- Create a draft from `/seller/listings/new`
+- Confirm the draft belongs to the authenticated seller
+- Confirm another seller cannot read or modify the draft
+- Confirm dashboard draft count, price, status, dates, and location
+- Confirm invalid data is rejected without creating a row
+
+**After verification, begin Edit / Publish / Mark Sold.**
