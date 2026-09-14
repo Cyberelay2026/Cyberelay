@@ -793,8 +793,9 @@ Listing Images implementation now includes:
 
 Production tests required:
 
-- [ ] Upload one valid image to a seller-owned listing
-- [ ] Upload multiple images and confirm the eight-image limit
+- [x] Upload one valid image to a seller-owned listing
+- [x] Upload multiple images successfully
+- [ ] Confirm the eight-image limit
 - [ ] Reject an unsupported format or image larger than 5 MB
 - [ ] Change the primary image
 - [ ] Reorder images
