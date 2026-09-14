@@ -2,13 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { requireApprovedAccount } from "@/lib/account-access";
 
 async function authenticatedSeller() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
-  const sellerId = data?.claims?.sub;
-  if (error || !sellerId) redirect("/seller/login");
+  const { supabase, userId: sellerId } = await requireApprovedAccount();
   return { supabase, sellerId };
 }
 

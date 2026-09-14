@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { ListingForm } from "@/components/listing-form";
 import { ListingImageManager, type ListingImage } from "@/components/listing-image-manager";
-import { createClient } from "@/lib/supabase/server";
+import { requireApprovedAccount } from "@/lib/account-access";
 import styles from "../../new/new-listing.module.css";
 
 const editableStatuses = ["draft", "active", "expired"];
@@ -13,10 +13,7 @@ export default async function EditListingPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const supabase = await createClient();
-  const { data: authData, error: authError } = await supabase.auth.getClaims();
-  const sellerId = authData?.claims?.sub;
-  if (authError || !sellerId) redirect("/seller/login");
+  const { supabase, userId: sellerId } = await requireApprovedAccount();
 
   const { data: listing, error } = await supabase
     .from("listings")

@@ -1,6 +1,4 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
 import {
   archiveListing,
@@ -10,6 +8,7 @@ import {
   restoreArchivedListing,
 } from "./listings/actions";
 import styles from "./dashboard.module.css";
+import { requireApprovedAccount } from "@/lib/account-access";
 
 const listingStatuses = [
   ["active", "Active"],
@@ -65,18 +64,14 @@ function normalizedStatus(value: unknown): ListingStatus | null {
 
 export default async function SellerPage({ searchParams }: { searchParams: Promise<{ created?: string; updated?: string; published?: string; sold?: string; archived?: string; restored?: string; reactivated?: string; error?: string }> }) {
   const query = await searchParams;
-  const supabase = await createClient();
-  const { data: authData, error: authError } = await supabase.auth.getClaims();
-  const userId = authData?.claims?.sub;
-
-  if (authError || !userId) redirect("/seller/login");
+  const { supabase, userId, profile: accessProfile, claims } = await requireApprovedAccount();
 
   const [{ data: profile }, { data: listingData, error: listingsError }] =
     await Promise.all([
       supabase
         .from("profiles")
         .select("display_name")
-        .eq("id", userId)
+        .eq("user_id", userId)
         .maybeSingle(),
       supabase
         .from("listings")
@@ -86,12 +81,12 @@ export default async function SellerPage({ searchParams }: { searchParams: Promi
     ]);
 
   const profileRow = (profile ?? {}) as DatabaseRow;
-  const metadata = authData.claims.user_metadata;
+  const metadata = claims.user_metadata;
   const metadataName =
     metadata && typeof metadata === "object" && "display_name" in metadata
       ? textValue(metadata.display_name)
       : null;
-  const email = textValue(authData.claims.email);
+  const email = textValue(claims.email);
   const displayName =
     textValue(profileRow.display_name) ?? metadataName ?? email ?? "Seller";
   const listings = listingsError ? [] : ((listingData ?? []) as DatabaseRow[]);
@@ -139,6 +134,7 @@ export default async function SellerPage({ searchParams }: { searchParams: Promi
             <p>Manage your Cyberelay computer listings from one place.</p>
           </div>
           <div className={styles.headerActions}>
+            {accessProfile.role === "admin" && <Link className="button button-outline" href="/admin">Admin</Link>}
             <Link className="button" href="/seller/listings/new">
               Add Computer
             </Link>

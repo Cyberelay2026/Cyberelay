@@ -18,7 +18,7 @@ import {
   storageOptions,
   storageTypes,
 } from "@/lib/listing-options";
-import { createClient } from "@/lib/supabase/server";
+import { requireApprovedAccount } from "@/lib/account-access";
 
 export type ListingActionState = {
   error?: string;
@@ -160,10 +160,7 @@ export async function createListing(
     return { error: "Review the highlighted information and try again.", fieldErrors: errors };
   }
 
-  const supabase = await createClient();
-  const { data: authData, error: authError } = await supabase.auth.getClaims();
-  const sellerId = authData?.claims?.sub;
-  if (authError || !sellerId) redirect("/seller/login");
+  const { supabase, userId: sellerId } = await requireApprovedAccount();
 
   const [resolutionWidth, resolutionHeight] = values.resolution
     ? values.resolution.split("x").map(Number)

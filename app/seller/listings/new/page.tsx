@@ -1,13 +1,10 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { ListingForm } from "@/components/listing-form";
-import { createClient } from "@/lib/supabase/server";
+import { requireApprovedAccount } from "@/lib/account-access";
 import styles from "./new-listing.module.css";
 
 export default async function NewListingPage() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
-  if (error || !data?.claims?.sub) redirect("/seller/login");
+  await requireApprovedAccount();
 
   return <main className={`section ${styles.page}`}><div className="container">
     <Link className={styles.backLink} href="/seller">← Back to dashboard</Link>

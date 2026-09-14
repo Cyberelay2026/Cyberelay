@@ -168,6 +168,21 @@ Environment variables:
 - [x] Seller login
 - [x] Seller logout
 - [x] Email confirmation handling
+
+## 3.2 Account Approval and Administration
+
+- [x] Prepare `seller` / `admin` database roles
+- [x] Prepare `pending` / `approved` / `suspended` account states
+- [x] Preserve existing sellers as approved during migration
+- [x] Designate `info@cyberelay.ca` as the first admin
+- [x] Add server-side approved-account guards to seller routes and actions
+- [x] Add protected `/admin` user review page
+- [x] Add controlled Approve / Suspend actions
+- [x] Allow admin to use the normal seller listing workflow
+- [x] Correct profile lookup to use `profiles.user_id`
+- [ ] Run `supabase/admin-access.sql` in production
+- [x] Review and update `storage.objects` seller mutation policies
+- [ ] Verify pending, approved, suspended, seller and admin flows in production
 - [x] Auth session persistence
 - [x] Secure server-side authentication
 - [x] Authentication redirects
