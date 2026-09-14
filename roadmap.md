@@ -315,7 +315,7 @@ Seller-entered free text must not directly create filter values.
 - [x] File-size limits
 - [ ] Image optimization strategy
 
-**Status: 🟡 Current / In Progress — production verification pending**
+**Status: 🟡 Current / In Progress — core production flow verified; isolation and optimization pending**
 
 ---
 
@@ -660,7 +660,7 @@ Phase 2 — Infrastructure            ██████████ 100%
 Phase 3 — Seller Authentication     ██████████ 100%
 Phase 4 — Seller Dashboard          █████████░  90%
 Phase 5 — Structured Listing Form   █████████░  90%  ← VERIFY IN PRODUCTION
-Phase 6 — Images                    ████████░░  80%  ← CURRENT
+Phase 6 — Images                    █████████░  90%  ← CURRENT
 Phase 7 — Database Inventory        ░░░░░░░░░░   0%
 Phase 8 — Listing Freshness         ░░░░░░░░░░   0%
 
@@ -795,12 +795,12 @@ Production tests required:
 
 - [x] Upload one valid image to a seller-owned listing
 - [x] Upload multiple images successfully
-- [ ] Confirm the eight-image limit
-- [ ] Reject an unsupported format or image larger than 5 MB
-- [ ] Change the primary image
-- [ ] Reorder images
-- [ ] Delete a primary and non-primary image
-- [ ] Confirm the dashboard displays the primary image
+- [x] Confirm the eight-image limit
+- [x] Reject an unsupported format or image larger than 5 MB
+- [x] Change the primary image
+- [x] Reorder images
+- [x] Delete a primary and non-primary image
+- [x] Confirm the dashboard displays the primary image
 - [ ] Confirm another seller cannot view or modify private listing images
 
 **After verification, complete image optimization planning and begin Database-driven Inventory.**
