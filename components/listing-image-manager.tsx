@@ -64,6 +64,24 @@ export function ListingImageManager({
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string>();
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  function toggleSelected(id: string) {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function selectAll() {
+    setSelectedIds(new Set(images.map((image) => image.id)));
+  }
+
+  function clearSelection() {
+    setSelectedIds(new Set());
+  }
 
   async function uploadImages(formData: FormData) {
     const files = formData.getAll("images").filter((value): value is File => value instanceof File && value.size > 0);
@@ -119,6 +137,52 @@ export function ListingImageManager({
 
     if (inputRef.current) inputRef.current.value = "";
     setMessage("Images optimized as WebP and uploaded successfully.");
+    setBusy(false);
+    router.refresh();
+  }
+
+  async function deleteSelectedImages() {
+    const selected = images.filter((image) => selectedIds.has(image.id));
+    if (!selected.length) return;
+    if (!window.confirm(`Delete ${selected.length} selected image${selected.length === 1 ? "" : "s"} from this listing?`)) return;
+
+    setBusy(true);
+    setMessage(undefined);
+    const supabase = createClient();
+    const { error: storageError } = await supabase.storage
+      .from("listing-images")
+      .remove(selected.map((image) => image.storage_path));
+
+    if (storageError) {
+      setMessage("The selected images could not be deleted.");
+      setBusy(false);
+      return;
+    }
+
+    const { error } = await supabase
+      .from("listing_images")
+      .delete()
+      .eq("listing_id", listingId)
+      .in("id", selected.map((image) => image.id));
+
+    if (error) {
+      setMessage("The image files were deleted, but their records could not be removed.");
+    } else {
+      const deletedPrimary = selected.some((image) => image.is_primary);
+      const replacement = deletedPrimary
+        ? images.find((image) => !selectedIds.has(image.id))
+        : undefined;
+      if (replacement) {
+        await supabase
+          .from("listing_images")
+          .update({ is_primary: true })
+          .eq("id", replacement.id)
+          .eq("listing_id", listingId);
+      }
+      setMessage(`${selected.length} image${selected.length === 1 ? "" : "s"} deleted.`);
+    }
+
+    clearSelection();
     setBusy(false);
     router.refresh();
   }
@@ -195,12 +259,27 @@ export function ListingImageManager({
       {message && <div className={styles.message} role="status">{message}</div>}
 
       {images.length > 0 && (
-        <div className={styles.grid}>
+        <>
+          <div className={styles.selectionBar}>
+            <div>
+              <button type="button" disabled={busy || selectedIds.size === images.length} onClick={selectAll}>Select all</button>
+              <button type="button" disabled={busy || selectedIds.size === 0} onClick={clearSelection}>Clear selection</button>
+              <span>{selectedIds.size} selected</span>
+            </div>
+            <button className={styles.deleteSelected} type="button" disabled={busy || selectedIds.size === 0} onClick={deleteSelectedImages}>
+              Delete selected{selectedIds.size ? ` (${selectedIds.size})` : ""}
+            </button>
+          </div>
+          <div className={styles.grid}>
           {images.map((image, index) => (
-            <article className={styles.card} key={image.id}>
+            <article className={`${styles.card} ${selectedIds.has(image.id) ? styles.selected : ""}`} key={image.id}>
               <div className={styles.preview}>
                 <img src={image.signed_url} alt={`Listing image ${index + 1}`} />
-                {image.is_primary && <span>Primary</span>}
+                <label className={styles.selector}>
+                  <input type="checkbox" checked={selectedIds.has(image.id)} disabled={busy} onChange={() => toggleSelected(image.id)} />
+                  <span>Select image {index + 1}</span>
+                </label>
+                {image.is_primary && <span className={styles.primaryBadge}>Primary</span>}
               </div>
               <div className={styles.controls}>
                 {!image.is_primary && <button type="button" disabled={busy} onClick={() => makePrimary(image)}>Make primary</button>}
@@ -210,7 +289,8 @@ export function ListingImageManager({
               </div>
             </article>
           ))}
-        </div>
+          </div>
+        </>
       )}
 
       {images.length < MAX_IMAGES && (
