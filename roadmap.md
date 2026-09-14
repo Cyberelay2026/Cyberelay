@@ -805,7 +805,8 @@ Production tests required:
 - [x] Delete a primary and non-primary image
 - [x] Confirm the dashboard displays the primary image
 - [x] Confirm a new JPEG or PNG upload is stored as `.webp`
-- [ ] Select and delete multiple images in one action
+- [x] Select and delete multiple images in one action
+- [x] Confirm bulk deletion promotes a remaining image when the primary is deleted
 - [ ] Confirm an image larger than 1,600px is resized correctly
 - [ ] Confirm portrait orientation and acceptable visual quality
 - [ ] Confirm another seller cannot view or modify private listing images
