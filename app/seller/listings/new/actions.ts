@@ -52,6 +52,7 @@ function buildListingTitle(values: {
   brand: string;
   model: string;
   cpu_brand: string;
+  cpu_family: string;
   cpu_model: string;
   ram_gb: string;
   storage_gb: string;
@@ -68,8 +69,11 @@ function buildListingTitle(values: {
     storageTypes.find(([value]) => value === values.storage_type)?.[1] ??
     values.storage_type;
   const gpu = [values.gpu_brand, values.gpu_model].filter(Boolean).join(" ");
+  const cpu = values.cpu_brand === "Apple"
+    ? `Apple ${values.cpu_family}`
+    : `${values.cpu_brand} ${values.cpu_model}`;
   const specifications = [
-    `${values.cpu_brand} ${values.cpu_model}`,
+    cpu,
     `${values.ram_gb}GB RAM`,
     `${storageCapacity} ${storageLabel}`,
     gpu,
@@ -126,7 +130,9 @@ export async function createListing(
   if (!allowed(cpuBrands, values.cpu_brand)) errors.cpu_brand = "Choose a CPU brand.";
   const familyValues = cpuFamilies[values.cpu_brand as keyof typeof cpuFamilies] ?? [];
   if (!familyValues.some((value) => value === values.cpu_family)) errors.cpu_family = "Choose a matching CPU family.";
-  if (!values.cpu_model || values.cpu_model.length > 100) errors.cpu_model = "Enter a CPU model up to 100 characters.";
+  if (values.cpu_brand !== "Apple" && (!values.cpu_model || values.cpu_model.length > 100)) errors.cpu_model = "Enter a CPU model up to 100 characters.";
+  if (values.cpu_brand === "Apple" && values.cpu_model) errors.cpu_model = "Apple chip model is selected using CPU family.";
+
   if (!allowed(ramOptions, Number(values.ram_gb))) errors.ram_gb = "Choose a supported RAM amount.";
   if (!allowed(storageOptions, Number(values.storage_gb))) errors.storage_gb = "Choose a supported storage amount.";
   if (!allowed(storageTypes, values.storage_type)) errors.storage_type = "Choose a storage type.";
@@ -170,7 +176,7 @@ export async function createListing(
     model: values.model,
     cpu_brand: values.cpu_brand,
     cpu_family: values.cpu_family,
-    cpu_model: values.cpu_model,
+    cpu_model: values.cpu_brand === "Apple" ? values.cpu_family : values.cpu_model,
     ram_gb: Number(values.ram_gb),
     storage_gb: Number(values.storage_gb),
     storage_type: values.storage_type,
