@@ -16,7 +16,7 @@ Current stage:
 
 Current milestone:
 
-**Supabase integration completed → Seller Authentication next**
+**Seller Authentication implemented → Production verification → Seller Dashboard next**
 
 Progress legend:
 
@@ -163,29 +163,29 @@ Environment variables:
 
 ## 3.1 Authentication
 
-- [ ] Seller sign-up
-- [ ] Seller login
-- [ ] Seller logout
-- [ ] Email confirmation handling
-- [ ] Auth session persistence
-- [ ] Secure server-side authentication
-- [ ] Authentication redirects
+- [x] Seller sign-up
+- [x] Seller login
+- [x] Seller logout
+- [x] Email confirmation handling
+- [x] Auth session persistence
+- [x] Secure server-side authentication
+- [x] Authentication redirects
 
 ## 3.2 Seller Profile
 
-- [ ] Create profile automatically after registration
-- [ ] Store seller display name
-- [ ] Verify Auth user → profile relationship
+- [ ] Verify automatic profile creation after registration (production test required)
+- [x] Pass seller display name to Supabase Auth metadata
+- [ ] Verify Auth user → profile relationship (production test required)
 - [ ] Seller profile management
 
 ## 3.3 Protected Seller Area
 
-- [ ] Create `/seller`
-- [ ] Protect seller routes
-- [ ] Redirect unauthenticated users to login
-- [ ] Redirect authenticated sellers appropriately
+- [x] Create `/seller` protected placeholder
+- [x] Protect seller routes
+- [x] Redirect unauthenticated users to login
+- [x] Redirect authenticated sellers appropriately
 
-**Status: 🟡 NEXT / CURRENT**
+**Status: 🟡 Implementation complete — production authentication verification pending**
 
 ---
 
@@ -645,7 +645,7 @@ As of the current development state:
 Phase 0 — Foundation                 ██████████ 100%
 Phase 1 — Public V1                 ██████████ 100%
 Phase 2 — Infrastructure            ██████████ 100%
-Phase 3 — Seller Authentication     ░░░░░░░░░░   0%  ← CURRENT
+Phase 3 — Seller Authentication     █████████░  90%  ← VERIFY IN PRODUCTION
 Phase 4 — Seller Dashboard          ░░░░░░░░░░   0%
 Phase 5 — Structured Listing Form   ░░░░░░░░░░   0%
 Phase 6 — Images                    ░░░░░░░░░░   0%
@@ -656,7 +656,7 @@ Current development path:
 
 YOU ARE HERE
      ↓
-Seller Authentication
+Seller Authentication (production verification)
      ↓
 Seller Dashboard
      ↓
@@ -701,18 +701,16 @@ Potential Full Marketplace
 
 # Next Milestone
 
-## Seller Authentication
+## Production Authentication Verification
 
-Next implementation:
+Before beginning the dashboard, verify in production:
 
-- Seller signup
-- Seller login
-- Seller logout
-- Email confirmation
-- Secure session handling
-- Protected `/seller` route
-- Verify automatic `profiles` creation
+- Create a seller account and receive the confirmation email
+- Follow the confirmation link and reach `/seller`
+- Verify the `profiles` trigger creates the matching profile with the display name
+- Log in, refresh/navigate, and confirm the session persists
+- Log out and confirm `/seller` redirects back to login
 
-After authentication is fully tested:
+After these checks pass:
 
 **Begin Seller Dashboard.**
