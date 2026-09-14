@@ -16,7 +16,7 @@ Current stage:
 
 Current milestone:
 
-**Seller Authentication complete → Seller Dashboard next**
+**Seller Dashboard → Structured Add Listing production verification**
 
 Progress legend:
 
@@ -269,6 +269,7 @@ Create controlled/standardized inputs for:
 - [x] Controlled storage types
 - [x] Controlled condition values
 - [x] CPU brand/family normalization
+- [x] Filter CPU family choices by selected CPU brand
 - [x] GPU type/brand normalization
 - [x] Battery health 0–100 validation
 - [x] Positive price validation stored as integer cents
@@ -288,7 +289,7 @@ Examples:
 
 Seller-entered free text must not directly create filter values.
 
-**Status: 🟡 Implementation complete — production draft/RLS verification pending**
+**Status: 🟡 Implementation complete — production draft verified; ownership/RLS verification pending**
 
 ---
 
@@ -724,6 +725,8 @@ Structured Add Listing implementation now includes:
 - Controlled computer specification inputs
 - Server-side validation and normalization
 - Integer-cent pricing with original-price preservation
+- Server-generated listing title from normalized specifications
+- CPU family choices filtered by selected CPU brand
 - Server-generated unique slug
 - Authenticated `seller_id` assignment
 - Private draft creation through existing RLS
@@ -731,10 +734,10 @@ Structured Add Listing implementation now includes:
 
 Before Edit / Publish / Mark Sold, verify in production:
 
-- Create a draft from `/seller/listings/new`
-- Confirm the draft belongs to the authenticated seller
-- Confirm another seller cannot read or modify the draft
-- Confirm dashboard draft count, price, status, dates, and location
-- Confirm invalid data is rejected without creating a row
+- [x] Create a draft from `/seller/listings/new`
+- [ ] Confirm the draft belongs to the authenticated seller
+- [ ] Confirm another seller cannot read or modify the draft
+- [ ] Confirm dashboard draft count, price, status, dates, and location
+- [ ] Confirm invalid data is rejected without creating a row
 
 **After verification, begin Edit / Publish / Mark Sold.**
