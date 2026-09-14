@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { PublicComputer } from "@/lib/computer";
 
@@ -121,7 +122,7 @@ export async function getPublicComputers(limit?: number) {
   return { computers: await attachImages(supabase, (data ?? []) as ListingRow[]), error: false };
 }
 
-export async function getPublicComputer(slug: string) {
+export const getPublicComputer = cache(async (slug: string) => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
@@ -132,4 +133,18 @@ export async function getPublicComputer(slug: string) {
   if (error || !data) return null;
   const computers = await attachImages(supabase, [data as ListingRow]);
   return computers[0] ?? null;
+});
+
+export async function getPublicListingSlugs() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("listings")
+    .select("slug,updated_at")
+    .eq("status", "active")
+    .order("updated_at", { ascending: false });
+  if (error) return [];
+  return (data ?? []).map((row) => ({
+    slug: String(row.slug),
+    updatedAt: new Date(String(row.updated_at)),
+  }));
 }

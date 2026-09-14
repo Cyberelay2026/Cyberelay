@@ -1,21 +1,77 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { ExternalLink, MapPin, Battery, CheckCircle2 } from "lucide-react";
 import { getPublicComputer } from "@/lib/public-listings";
 
 export const dynamic = "force-dynamic";
 
+type PageProps = { params: Promise<{ slug: string }> };
+
+function listingDescription(computer: NonNullable<Awaited<ReturnType<typeof getPublicComputer>>>) {
+  return `${computer.brand} ${computer.model} with ${computer.cpu}, ${computer.ram}GB RAM and ${storageLabel(computer.storage)} ${computer.storageType}. ${computer.condition} condition in ${computer.city}, ${computer.province}.`;
+}
+
+function schemaCondition(condition: string) {
+  if (condition === "New") return "https://schema.org/NewCondition";
+  if (condition === "Poor") return "https://schema.org/DamagedCondition";
+  return "https://schema.org/UsedCondition";
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const computer = await getPublicComputer(slug);
+  if (!computer) return { title: "Computer not found", robots: { index: false, follow: false } };
+  const title = `${computer.brand} ${computer.model} — $${computer.price.toLocaleString("en-CA")} CAD`;
+  const description = listingDescription(computer);
+  const path = `/computers/${computer.slug}`;
+  const image = computer.image !== "/laptop-placeholder.svg" ? computer.image : undefined;
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { type: "website", url: path, title, description, images: image ? [{ url: image, alt: `${computer.brand} ${computer.model}` }] : undefined },
+    twitter: { card: image ? "summary_large_image" : "summary", title, description, images: image ? [image] : undefined },
+  };
+}
+
 function storageLabel(value: number) {
   return value >= 1024 && value % 1024 === 0 ? `${value / 1024}TB` : `${value}GB`;
 }
 
-export default async function ComputerDetail({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ComputerDetail({ params }: PageProps) {
   const { slug } = await params;
   const computer = await getPublicComputer(slug);
   if (!computer) notFound();
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${computer.brand} ${computer.model}`,
+    sku: computer.id,
+    description: listingDescription(computer),
+    brand: { "@type": "Brand", name: computer.brand },
+    model: computer.model,
+    ...(computer.image !== "/laptop-placeholder.svg" ? { image: computer.images.length ? computer.images : [computer.image] } : {}),
+    itemCondition: schemaCondition(computer.condition),
+    offers: {
+      "@type": "Offer",
+      url: `https://www.cyberelay.ca/computers/${computer.slug}`,
+      priceCurrency: "CAD",
+      price: computer.price.toFixed(2),
+      availability: "https://schema.org/InStock",
+    },
+    additionalProperty: [
+      { "@type": "PropertyValue", name: "Processor", value: computer.cpu },
+      { "@type": "PropertyValue", name: "Memory", value: `${computer.ram}GB RAM` },
+      { "@type": "PropertyValue", name: "Storage", value: `${storageLabel(computer.storage)} ${computer.storageType}` },
+      { "@type": "PropertyValue", name: "Graphics", value: computer.gpu },
+    ],
+  };
+
   return (
     <main className="section">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }} />
       <div className="container">
         <Link href="/computers" className="back-link">← Back to computers</Link>
         <div className="detail-grid">

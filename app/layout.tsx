@@ -4,8 +4,27 @@ import "./auth.css";
 import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
-  title: "Cyberelay | Quality Used Computers",
-  description: "Browse clearly listed used laptops and desktops by specs, condition and price.",
+  metadataBase: new URL("https://www.cyberelay.ca"),
+  title: {
+    default: "Cyberelay | Used Computers in Calgary",
+    template: "%s | Cyberelay",
+  },
+  description: "Find used laptops and computers in Calgary with clear specifications, condition details and prices.",
+  applicationName: "Cyberelay",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "en_CA",
+    siteName: "Cyberelay",
+    url: "/",
+    title: "Cyberelay | Used Computers in Calgary",
+    description: "Find used laptops and computers with clear specifications, condition details and prices.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cyberelay | Used Computers in Calgary",
+    description: "Find used laptops and computers with clear specifications, condition details and prices.",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

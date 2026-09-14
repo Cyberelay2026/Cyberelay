@@ -378,6 +378,22 @@ display:
 
 **Status: ✅ Core complete — dynamic location filtering remains a planned enhancement**
 
+## 7.3 SEO & AI Discovery Foundation
+
+- [x] Configure canonical production URL and reusable metadata template
+- [x] Add page-specific titles and descriptions for public pages
+- [x] Add Open Graph and X/Twitter metadata
+- [x] Add `robots.txt` with private route exclusions
+- [x] Add dynamic `sitemap.xml` containing active listings only
+- [x] Add dynamic listing metadata
+- [x] Add Product and Offer JSON-LD to active listing pages
+- [x] Add `noindex` metadata to Seller and Admin areas
+- [ ] Verify production metadata, robots and sitemap responses
+- [ ] Validate an active listing with Google Rich Results Test
+- [ ] Connect Google Search Console and submit sitemap
+
+**Status: 🟡 Implementation in progress — production verification pending**
+
 ---
 
 # Phase 8 — Listing Freshness & Marketplace Link Health
