@@ -47,3 +47,6 @@
 .soldForm input { width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit; }
 .soldForm input:focus { outline:2px solid color-mix(in srgb,var(--accent) 30%,transparent);border-color:var(--accent); }
 @media(max-width:620px){.listingActions,.soldForm{align-items:stretch;flex-direction:column}.listingActions>a,.listingActions form,.listingActions button{width:100%}}
+
+.listingImage { width:calc(100% + 44px);height:210px;display:block;object-fit:cover;margin:-22px -22px 20px;border-radius:16px 16px 0 0;background:#eef1f5; }
+@media(max-width:620px){.listingImage{height:190px}}
