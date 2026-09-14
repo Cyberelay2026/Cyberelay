@@ -48,6 +48,36 @@ function slugify(value: string) {
   return `${base}-${randomUUID().slice(0, 8)}`;
 }
 
+function buildListingTitle(values: {
+  brand: string;
+  model: string;
+  cpu_brand: string;
+  cpu_model: string;
+  ram_gb: string;
+  storage_gb: string;
+  storage_type: string;
+  gpu_brand: string;
+  gpu_model: string;
+}) {
+  const storageGb = Number(values.storage_gb);
+  const storageCapacity =
+    storageGb >= 1024 && storageGb % 1024 === 0
+      ? `${storageGb / 1024}TB`
+      : `${storageGb}GB`;
+  const storageLabel =
+    storageTypes.find(([value]) => value === values.storage_type)?.[1] ??
+    values.storage_type;
+  const gpu = [values.gpu_brand, values.gpu_model].filter(Boolean).join(" ");
+  const specifications = [
+    `${values.cpu_brand} ${values.cpu_model}`,
+    `${values.ram_gb}GB RAM`,
+    `${storageCapacity} ${storageLabel}`,
+    gpu,
+  ].filter(Boolean);
+
+  return `${values.brand} ${values.model} — ${specifications.join(", ")}`;
+}
+
 function priceToCents(value: string) {
   if (!/^\d+(\.\d{1,2})?$/.test(value)) return null;
   const cents = Math.round(Number(value) * 100);
@@ -72,7 +102,7 @@ export async function createListing(
   formData: FormData,
 ): Promise<ListingActionState> {
   const values = {
-    title: field(formData, "title"), brand: field(formData, "brand"),
+    brand: field(formData, "brand"),
     model: field(formData, "model"), cpu_brand: field(formData, "cpu_brand"),
     cpu_family: field(formData, "cpu_family"), cpu_model: field(formData, "cpu_model"),
     ram_gb: field(formData, "ram_gb"), storage_gb: field(formData, "storage_gb"),
@@ -91,7 +121,6 @@ export async function createListing(
   };
   const errors: Record<string, string> = {};
 
-  if (values.title.length < 5 || values.title.length > 120) errors.title = "Use 5–120 characters.";
   if (!allowed(brands, values.brand)) errors.brand = "Choose a supported brand.";
   if (!values.model || values.model.length > 100) errors.model = "Enter a model up to 100 characters.";
   if (!allowed(cpuBrands, values.cpu_brand)) errors.cpu_brand = "Choose a CPU brand.";
@@ -132,10 +161,11 @@ export async function createListing(
   const [resolutionWidth, resolutionHeight] = values.resolution
     ? values.resolution.split("x").map(Number)
     : [null, null];
+  const title = buildListingTitle(values);
   const { error } = await supabase.from("listings").insert({
     seller_id: sellerId,
-    title: values.title,
-    slug: slugify(values.title),
+    title,
+    slug: slugify(title),
     brand: values.brand,
     model: values.model,
     cpu_brand: values.cpu_brand,
