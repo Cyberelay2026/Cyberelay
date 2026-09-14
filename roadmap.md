@@ -180,14 +180,20 @@ Environment variables:
 - [x] Add controlled Approve / Suspend actions
 - [x] Allow admin to use the normal seller listing workflow
 - [x] Correct profile lookup to use `profiles.user_id`
-- [ ] Run `supabase/admin-access.sql` in production
+- [x] Run `supabase/admin-access.sql` in production
 - [x] Review and update `storage.objects` seller mutation policies
-- [ ] Verify pending, approved, suspended, seller and admin flows in production
+- [x] Verify Admin button appears for the admin account
+- [x] Verify admin can review users at `/admin`
+- [x] Verify admin can approve and suspend another account
+- [x] Verify pending and suspended accounts cannot access the Seller Dashboard
+- [x] Verify admin can create a computer listing
+- [x] Verify admin-created listings appear under My Listings
+- [x] Verify approved non-admin sellers cannot access `/admin`
 - [x] Auth session persistence
 - [x] Secure server-side authentication
 - [x] Authentication redirects
 
-## 3.2 Seller Profile
+## 3.3 Seller Profile
 
 - [x] Verify automatic profile creation after registration in production
 - [x] Pass seller display name to Supabase Auth metadata
