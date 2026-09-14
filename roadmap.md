@@ -773,7 +773,7 @@ Production tests required:
 - [ ] Archive a draft and confirm the archived count
 - [ ] Restore an archived listing and confirm it becomes a private draft
 - [ ] Archive an active listing
-- [ ] Reactivate an expired listing
+- [x] Reactivate an expired listing
 - [ ] Confirm another seller cannot perform any lifecycle action
 
 **After verification, begin Listing Images.**
