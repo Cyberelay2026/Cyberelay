@@ -270,6 +270,7 @@ Create controlled/standardized inputs for:
 - [x] Controlled condition values
 - [x] CPU brand/family normalization
 - [x] Filter CPU family choices by selected CPU brand
+- [x] Use Apple M-series chip choices without a duplicate CPU model field
 - [x] GPU type/brand normalization
 - [x] Battery health 0–100 validation
 - [x] Positive price validation stored as integer cents
@@ -727,6 +728,7 @@ Structured Add Listing implementation now includes:
 - Integer-cent pricing with original-price preservation
 - Server-generated listing title from normalized specifications
 - CPU family choices filtered by selected CPU brand
+- Apple M-series chip selection without duplicate CPU model entry
 - Server-generated unique slug
 - Authenticated `seller_id` assignment
 - Private draft creation through existing RLS
