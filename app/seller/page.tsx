@@ -2,7 +2,13 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
-import { markListingSold, publishListing } from "./listings/actions";
+import {
+  archiveListing,
+  markListingSold,
+  publishListing,
+  reactivateExpiredListing,
+  restoreArchivedListing,
+} from "./listings/actions";
 import styles from "./dashboard.module.css";
 
 const listingStatuses = [
@@ -57,7 +63,7 @@ function normalizedStatus(value: unknown): ListingStatus | null {
   return listingStatuses.find(([status]) => status === value)?.[0] ?? null;
 }
 
-export default async function SellerPage({ searchParams }: { searchParams: Promise<{ created?: string; updated?: string; published?: string; sold?: string; error?: string }> }) {
+export default async function SellerPage({ searchParams }: { searchParams: Promise<{ created?: string; updated?: string; published?: string; sold?: string; archived?: string; restored?: string; reactivated?: string; error?: string }> }) {
   const query = await searchParams;
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getClaims();
@@ -121,6 +127,9 @@ export default async function SellerPage({ searchParams }: { searchParams: Promi
         {query.updated === "1" && <div className={styles.successNotice} role="status">Listing updated successfully.</div>}
         {query.published === "1" && <div className={styles.successNotice} role="status">Listing published successfully.</div>}
         {query.sold === "1" && <div className={styles.successNotice} role="status">Listing marked as sold.</div>}
+        {query.archived === "1" && <div className={styles.successNotice} role="status">Listing archived.</div>}
+        {query.restored === "1" && <div className={styles.successNotice} role="status">Listing restored as a private draft.</div>}
+        {query.reactivated === "1" && <div className={styles.successNotice} role="status">Expired listing reactivated.</div>}
         {query.error && <div className={styles.dataNotice} role="alert">{query.error === "sold-price" ? "Enter a valid sold price." : "That listing action could not be completed."}</div>}
 
         <section aria-labelledby="listing-summary-heading">
@@ -211,6 +220,24 @@ export default async function SellerPage({ searchParams }: { searchParams: Promi
                               <input name="sold_price" inputMode="decimal" required defaultValue={(Number(listing.price_cents) / 100).toFixed(2)} />
                             </label>
                             <button className="button" type="submit">Mark sold</button>
+                          </form>
+                        )}
+                        {(status === "draft" || status === "active" || status === "expired") && (
+                          <form action={archiveListing}>
+                            <input name="listing_id" type="hidden" value={textValue(listing.id) ?? ""} />
+                            <button className="button button-outline" type="submit">Archive</button>
+                          </form>
+                        )}
+                        {status === "archived" && (
+                          <form action={restoreArchivedListing}>
+                            <input name="listing_id" type="hidden" value={textValue(listing.id) ?? ""} />
+                            <button className="button button-outline" type="submit">Restore as draft</button>
+                          </form>
+                        )}
+                        {status === "expired" && (
+                          <form action={reactivateExpiredListing}>
+                            <input name="listing_id" type="hidden" value={textValue(listing.id) ?? ""} />
+                            <button className="button" type="submit">Reactivate</button>
                           </form>
                         )}
                       </div>
