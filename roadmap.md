@@ -395,10 +395,11 @@ display:
 - [x] Keep public image delivery governed by active-listing RLS
 - [x] Regenerate slugs while a listing remains a private draft
 - [x] Freeze slugs after first publication to preserve indexed URLs
-- [ ] Validate an active listing with Google Rich Results Test
-- [ ] Connect Google Search Console and submit sitemap
+- [x] Validate an active listing with Google Rich Results Test (Product and Merchant listing valid)
+- [x] Connect the `cyberelay.ca` Domain property in Google Search Console
+- [x] Submit sitemap successfully and verify five discovered pages
 
-**Status: 🟡 Implementation in progress — production verification pending**
+**Status: ✅ Foundation complete — Search Console indexing data pending**
 
 ---
 
