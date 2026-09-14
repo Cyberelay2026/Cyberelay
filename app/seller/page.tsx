@@ -95,6 +95,33 @@ export default async function SellerPage({ searchParams }: { searchParams: Promi
   const displayName =
     textValue(profileRow.display_name) ?? metadataName ?? email ?? "Seller";
   const listings = listingsError ? [] : ((listingData ?? []) as DatabaseRow[]);
+  const listingIds = listings.map((listing) => textValue(listing.id)).filter((id): id is string => Boolean(id));
+  const { data: imageData } = listingIds.length
+    ? await supabase
+        .from("listing_images")
+        .select("listing_id,storage_path,sort_order,is_primary")
+        .in("listing_id", listingIds)
+        .order("sort_order", { ascending: true })
+    : { data: [] };
+  const selectedImages = new Map<string, { storage_path: string; is_primary: boolean }>();
+  for (const image of imageData ?? []) {
+    const existing = selectedImages.get(image.listing_id);
+    if (!existing || (!existing.is_primary && image.is_primary)) {
+      selectedImages.set(image.listing_id, image);
+    }
+  }
+  const selectedEntries = [...selectedImages.entries()];
+  const { data: signedImages } = selectedEntries.length
+    ? await supabase.storage
+        .from("listing-images")
+        .createSignedUrls(selectedEntries.map(([, image]) => image.storage_path), 3600)
+    : { data: [] };
+  const imageUrls = new Map(
+    selectedEntries.flatMap(([listingId], index) => {
+      const signedUrl = signedImages?.[index]?.signedUrl;
+      return signedUrl ? [[listingId, signedUrl] as const] : [];
+    }),
+  );
   const counts = Object.fromEntries(
     listingStatuses.map(([status]) => [
       status,
@@ -183,6 +210,9 @@ export default async function SellerPage({ searchParams }: { searchParams: Promi
                     className={styles.listingCard}
                     key={textValue(listing.id) ?? `listing-${index}`}
                   >
+                    {textValue(listing.id) && imageUrls.get(textValue(listing.id)!) && (
+                      <img className={styles.listingImage} src={imageUrls.get(textValue(listing.id)!)} alt="" />
+                    )}
                     <div className={styles.listingTopline}>
                       <span className={`${styles.statusBadge} ${status ? styles[status] : ""}`}>
                         {label}
