@@ -16,7 +16,7 @@ Current stage:
 
 Current milestone:
 
-**Edit / Publish / Mark Sold implementation and production verification**
+**Archive / Reactivate implementation and production verification**
 
 Progress legend:
 
@@ -214,8 +214,8 @@ Environment variables:
 - [x] Edit listing
 - [x] Publish listing
 - [x] Mark listing as sold
-- [ ] Archive listing
-- [ ] Reactivate eligible listing
+- [x] Archive listing
+- [x] Reactivate eligible listing
 
 ## 4.3 Seller Listing Status
 
@@ -658,7 +658,7 @@ Phase 0 — Foundation                 ██████████ 100%
 Phase 1 — Public V1                 ██████████ 100%
 Phase 2 — Infrastructure            ██████████ 100%
 Phase 3 — Seller Authentication     ██████████ 100%
-Phase 4 — Seller Dashboard          ███████░░░  70%  ← CURRENT
+Phase 4 — Seller Dashboard          ████████░░  80%  ← CURRENT
 Phase 5 — Structured Listing Form   █████████░  90%  ← VERIFY IN PRODUCTION
 Phase 6 — Images                    ░░░░░░░░░░   0%
 Phase 7 — Database Inventory        ░░░░░░░░░░   0%
@@ -754,10 +754,26 @@ Edit / Publish / Mark Sold implementation now includes:
 
 Production tests still required:
 
-- [ ] Edit a seller-owned draft and confirm dashboard changes
-- [ ] Publish a draft and confirm active status and published date
-- [ ] Mark an active listing sold and confirm sold price/date
+- [x] Edit a seller-owned draft and confirm dashboard changes
+- [x] Publish a draft and confirm active status and published date
+- [x] Mark an active listing sold and confirm sold price/date
 - [ ] Confirm another seller cannot edit, publish, or mark the listing sold
 - [ ] Confirm sold and archived listings cannot be edited
 
-**After verification, continue with Archive / Reactivate and Image Upload.**
+Archive / Reactivate implementation now includes:
+
+- Draft, active, and expired listings can be archived
+- Archived listings restore safely as private drafts
+- Expired listings can reactivate as active with refreshed availability confirmation
+- Sold listings cannot be restored or reactivated
+- Every transition checks the server session, seller ownership, current status, and existing RLS
+
+Production tests required:
+
+- [ ] Archive a draft and confirm the archived count
+- [ ] Restore an archived listing and confirm it becomes a private draft
+- [ ] Archive an active listing
+- [ ] Reactivate an expired listing
+- [ ] Confirm another seller cannot perform any lifecycle action
+
+**After verification, begin Listing Images.**
