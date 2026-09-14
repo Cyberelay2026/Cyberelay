@@ -16,7 +16,7 @@ Current stage:
 
 Current milestone:
 
-**Seller Dashboard → Structured Add Listing production verification**
+**Edit / Publish / Mark Sold implementation and production verification**
 
 Progress legend:
 
@@ -211,9 +211,9 @@ Environment variables:
 ## 4.2 Listing Management
 
 - [x] Create private draft listing
-- [ ] Edit listing
-- [ ] Publish listing
-- [ ] Mark listing as sold
+- [x] Edit listing
+- [x] Publish listing
+- [x] Mark listing as sold
 - [ ] Archive listing
 - [ ] Reactivate eligible listing
 
@@ -223,10 +223,11 @@ Supported lifecycle:
 
 `draft → active → sold / expired / archived`
 
-- [ ] Status controls
-- [ ] Published date
-- [ ] Sold date
-- [ ] Sold price
+- [x] Draft publish control
+- [x] Published date
+- [x] Active listing mark-sold control
+- [x] Sold date
+- [x] Sold price
 - [ ] Availability confirmation
 
 **Status: 🟡 Current / In Progress**
@@ -657,7 +658,7 @@ Phase 0 — Foundation                 ██████████ 100%
 Phase 1 — Public V1                 ██████████ 100%
 Phase 2 — Infrastructure            ██████████ 100%
 Phase 3 — Seller Authentication     ██████████ 100%
-Phase 4 — Seller Dashboard          ████░░░░░░  40%  ← CURRENT
+Phase 4 — Seller Dashboard          ███████░░░  70%  ← CURRENT
 Phase 5 — Structured Listing Form   █████████░  90%  ← VERIFY IN PRODUCTION
 Phase 6 — Images                    ░░░░░░░░░░   0%
 Phase 7 — Database Inventory        ░░░░░░░░░░   0%
@@ -742,4 +743,21 @@ Before Edit / Publish / Mark Sold, verify in production:
 - [ ] Confirm dashboard draft count, price, status, dates, and location
 - [ ] Confirm invalid data is rejected without creating a row
 
-**After verification, begin Edit / Publish / Mark Sold.**
+Edit / Publish / Mark Sold implementation now includes:
+
+- Seller-owned edit route using the structured listing form
+- Server-side validation for listing updates
+- Draft → active publishing with `published_at`
+- Active → sold transition with seller-entered sold price and `sold_at`
+- Server authentication, seller ownership filters, and existing RLS on every mutation
+- Original asking price remains unchanged when the current asking price is edited
+
+Production tests still required:
+
+- [ ] Edit a seller-owned draft and confirm dashboard changes
+- [ ] Publish a draft and confirm active status and published date
+- [ ] Mark an active listing sold and confirm sold price/date
+- [ ] Confirm another seller cannot edit, publish, or mark the listing sold
+- [ ] Confirm sold and archived listings cannot be edited
+
+**After verification, continue with Archive / Reactivate and Image Upload.**
