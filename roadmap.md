@@ -388,7 +388,9 @@ display:
 - [x] Add dynamic listing metadata
 - [x] Add Product and Offer JSON-LD to active listing pages
 - [x] Add `noindex` metadata to Seller and Admin areas
-- [ ] Verify production metadata, robots and sitemap responses
+- [x] Verify production metadata, canonical URLs, robots and sitemap responses
+- [x] Verify active listing Product JSON-LD, Open Graph image and X/Twitter image
+- [x] Restore and record the public active-listing Storage image policy
 - [ ] Validate an active listing with Google Rich Results Test
 - [ ] Connect Google Search Console and submit sitemap
 
