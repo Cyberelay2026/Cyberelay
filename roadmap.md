@@ -196,8 +196,11 @@ Environment variables:
 
 ## 4.1 Dashboard Foundation
 
-- [ ] Seller dashboard layout
-- [ ] Display seller's listings
+- [x] Seller dashboard layout
+- [x] Display authenticated seller's listings
+- [x] Load seller profile and display-name welcome
+- [x] Display status summary counts
+- [x] Empty and database-error states
 - [ ] Active listings section
 - [ ] Draft listings section
 - [ ] Sold listings section
@@ -225,7 +228,7 @@ Supported lifecycle:
 - [ ] Sold price
 - [ ] Availability confirmation
 
-**Status: ⬜ Planned**
+**Status: 🟡 Current / In Progress**
 
 ---
 
@@ -592,11 +595,13 @@ Public website
 → Structured database  
 → Seller authentication  
 → Seller dashboard  
-→ Add/Edit listings  
+→ Structured Add Listing
+→ Edit / Publish / Mark Sold
 → Image upload  
 → Database-driven inventory  
-→ Dynamic filters  
-→ Listing freshness
+→ SEO & AI Discovery Foundation
+→ Acquisition / Analytics
+→ PC Value
 
 ## V1.5 — Data & Analytics
 
@@ -649,7 +654,7 @@ Phase 0 — Foundation                 ██████████ 100%
 Phase 1 — Public V1                 ██████████ 100%
 Phase 2 — Infrastructure            ██████████ 100%
 Phase 3 — Seller Authentication     ██████████ 100%
-Phase 4 — Seller Dashboard          ░░░░░░░░░░   0%  ← NEXT
+Phase 4 — Seller Dashboard          ██░░░░░░░░  20%  ← CURRENT
 Phase 5 — Structured Listing Form   ░░░░░░░░░░   0%
 Phase 6 — Images                    ░░░░░░░░░░   0%
 Phase 7 — Database Inventory        ░░░░░░░░░░   0%
@@ -663,21 +668,17 @@ Seller Authentication ✅
      ↓
 Seller Dashboard ← YOU ARE HERE
      ↓
-Add/Edit Listing
+Structured Add Listing
+     ↓
+Edit / Publish / Mark Sold
      ↓
 Photo Upload
      ↓
 Database-Driven Inventory
      ↓
-Dynamic Filters
+SEO & AI Discovery Foundation
      ↓
-Listing Freshness
-     ↓
-────────── CYBERELAY V1 CORE COMPLETE ──────────
-     ↓
-Analytics / Data Collection
-     ↓
-Multi-Seller Growth
+Acquisition / Analytics
      ↓
 PC Value
      ↓
@@ -704,22 +705,23 @@ Potential Full Marketplace
 
 # Next Milestone
 
-## Seller Dashboard Foundation
+## Structured Add Listing
 
-Production authentication verification is complete:
+Seller Dashboard Foundation now includes:
 
-- Seller sign-up and Resend confirmation email
-- Email confirmation callback to `/seller`
-- Automatic `profiles` row creation with display name
-- Seller login and persistent session
-- Protected seller routes and authentication redirects
-- Seller logout
+- Server-verified protected dashboard
+- Seller profile welcome with safe fallback
+- Seller-owned listing query protected by RLS
+- Active, draft, sold, expired, and archived summary counts
+- Lightweight listing cards
+- Empty and database-error states
+- Responsive Cyberelay styling
 
 Next implementation target:
 
-- Build the seller dashboard layout
-- Query and display only the authenticated seller's listings
-- Add empty, loading, and error states
+- Build the structured Add Computer form
+- Validate controlled computer specifications on the server
+- Create seller-owned draft listings through existing RLS
 - Preserve the existing public website and demo inventory
 
-**Begin Seller Dashboard.**
+**Continue Seller Dashboard with Structured Add Listing.**

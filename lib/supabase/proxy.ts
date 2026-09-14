@@ -26,8 +26,9 @@ export async function updateSession(request: NextRequest) {
   const isAuthenticated = !error && Boolean(data?.claims?.sub);
   const path = request.nextUrl.pathname;
   const isAuthPage = path === "/seller/login" || path === "/seller/signup";
+  const isProtectedSellerRoute = path.startsWith("/seller") && !isAuthPage;
 
-  if (!isAuthenticated && path === "/seller") {
+  if (!isAuthenticated && isProtectedSellerRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/seller/login";
     url.search = "";
