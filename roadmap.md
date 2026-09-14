@@ -16,7 +16,7 @@ Current stage:
 
 Current milestone:
 
-**Archive / Reactivate implementation and production verification**
+**Listing Images implementation and production verification**
 
 Progress legend:
 
@@ -299,23 +299,23 @@ Seller-entered free text must not directly create filter values.
 
 ## 6.1 Supabase Storage
 
-- [ ] Create listing-images storage bucket
-- [ ] Configure Storage RLS
-- [ ] Seller-owned image permissions
-- [ ] Image upload
-- [ ] Image deletion
-- [ ] Image replacement
+- [x] Create listing-images storage bucket
+- [x] Configure Storage RLS
+- [x] Seller-owned image permissions
+- [x] Image upload
+- [x] Image deletion
+- [x] Image replacement through delete and upload
 
 ## 6.2 Image Management
 
-- [ ] Multiple images per listing
-- [ ] Primary image
-- [ ] Image ordering
-- [ ] File-type validation
-- [ ] File-size limits
+- [x] Multiple images per listing
+- [x] Primary image
+- [x] Image ordering
+- [x] File-type validation
+- [x] File-size limits
 - [ ] Image optimization strategy
 
-**Status: ⬜ Planned**
+**Status: 🟡 Current / In Progress — production verification pending**
 
 ---
 
@@ -658,9 +658,9 @@ Phase 0 — Foundation                 ██████████ 100%
 Phase 1 — Public V1                 ██████████ 100%
 Phase 2 — Infrastructure            ██████████ 100%
 Phase 3 — Seller Authentication     ██████████ 100%
-Phase 4 — Seller Dashboard          ████████░░  80%  ← CURRENT
+Phase 4 — Seller Dashboard          █████████░  90%
 Phase 5 — Structured Listing Form   █████████░  90%  ← VERIFY IN PRODUCTION
-Phase 6 — Images                    ░░░░░░░░░░   0%
+Phase 6 — Images                    ████████░░  80%  ← CURRENT
 Phase 7 — Database Inventory        ░░░░░░░░░░   0%
 Phase 8 — Listing Freshness         ░░░░░░░░░░   0%
 
@@ -779,3 +779,27 @@ Production tests required:
 - [ ] Confirm another seller cannot perform any lifecycle action
 
 **After verification, begin Listing Images.**
+
+Listing Images implementation now includes:
+
+- Private `listing-images` bucket with 5 MB JPEG, PNG, and WebP restrictions
+- Seller/listing-scoped Storage paths and existing RLS enforcement
+- Up to eight images per listing
+- Server-generated short-lived signed image URLs
+- Upload, delete, primary-image selection, and ordering controls
+- Automatic primary fallback after deleting the primary image
+- Primary image displayed on the seller dashboard
+- No public inventory migration and no service-role key
+
+Production tests required:
+
+- [ ] Upload one valid image to a seller-owned listing
+- [ ] Upload multiple images and confirm the eight-image limit
+- [ ] Reject an unsupported format or image larger than 5 MB
+- [ ] Change the primary image
+- [ ] Reorder images
+- [ ] Delete a primary and non-primary image
+- [ ] Confirm the dashboard displays the primary image
+- [ ] Confirm another seller cannot view or modify private listing images
+
+**After verification, complete image optimization planning and begin Database-driven Inventory.**
