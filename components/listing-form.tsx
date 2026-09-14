@@ -39,7 +39,7 @@ export function ListingForm() {
       <fieldset><legend>Processor and memory</legend><div className={styles.grid}>
         <Select label="CPU brand" name="cpu_brand" error={error("cpu_brand")} options={Object.keys(cpuFamilies).map((v) => [v, v])} onChange={(event) => setCpuBrand(event.target.value)} />
         <Select label="CPU family" name="cpu_family" error={error("cpu_family")} options={cpuFamilyOptions} disabled={!cpuBrand} resetKey={cpuBrand || "none"} />
-        <Field label="CPU model" name="cpu_model" error={error("cpu_model")}><input name="cpu_model" required maxLength={100} placeholder="e.g. i5-1135G7" /></Field>
+        {cpuBrand !== "Apple" && <Field label="CPU model" name="cpu_model" error={error("cpu_model")}><input name="cpu_model" required maxLength={100} placeholder="e.g. i5-1135G7" /></Field>}
         <Select label="RAM" name="ram_gb" error={error("ram_gb")} options={ramOptions.map((v) => [String(v), `${v}GB`])} />
       </div></fieldset>
 
