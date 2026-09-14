@@ -16,7 +16,7 @@ Current stage:
 
 Current milestone:
 
-**Seller Authentication implemented → Production verification → Seller Dashboard next**
+**Seller Authentication complete → Seller Dashboard next**
 
 Progress legend:
 
@@ -107,6 +107,7 @@ Progress legend:
 - [x] Create dedicated Cyberelay Vercel setup
 - [x] Connect repository to Vercel
 - [x] Verify production deployment
+- [x] Connect and verify `cyberelay.ca` production domain
 
 ## 2.2 Supabase Project
 
@@ -152,14 +153,14 @@ Environment variables:
 - [x] Verify production build
 - [x] Push Supabase integration to `main`
 - [x] Verify Vercel deployment
+- [x] Configure production authentication URLs
+- [x] Configure Resend custom SMTP and domain authentication
 
 **Status: ✅ Complete**
 
 ---
 
 # Phase 3 — Seller Authentication
-
-> 🚩 CURRENT DEVELOPMENT PHASE
 
 ## 3.1 Authentication
 
@@ -173,9 +174,9 @@ Environment variables:
 
 ## 3.2 Seller Profile
 
-- [ ] Verify automatic profile creation after registration (production test required)
+- [x] Verify automatic profile creation after registration in production
 - [x] Pass seller display name to Supabase Auth metadata
-- [ ] Verify Auth user → profile relationship (production test required)
+- [x] Verify Auth user → profile relationship in production
 - [ ] Seller profile management
 
 ## 3.3 Protected Seller Area
@@ -185,11 +186,13 @@ Environment variables:
 - [x] Redirect unauthenticated users to login
 - [x] Redirect authenticated sellers appropriately
 
-**Status: 🟡 Implementation complete — production authentication verification pending**
+**Status: ✅ Complete — production authentication flow verified**
 
 ---
 
 # Phase 4 — Seller Dashboard
+
+> 🚩 CURRENT DEVELOPMENT PHASE
 
 ## 4.1 Dashboard Foundation
 
@@ -645,8 +648,8 @@ As of the current development state:
 Phase 0 — Foundation                 ██████████ 100%
 Phase 1 — Public V1                 ██████████ 100%
 Phase 2 — Infrastructure            ██████████ 100%
-Phase 3 — Seller Authentication     █████████░  90%  ← VERIFY IN PRODUCTION
-Phase 4 — Seller Dashboard          ░░░░░░░░░░   0%
+Phase 3 — Seller Authentication     ██████████ 100%
+Phase 4 — Seller Dashboard          ░░░░░░░░░░   0%  ← NEXT
 Phase 5 — Structured Listing Form   ░░░░░░░░░░   0%
 Phase 6 — Images                    ░░░░░░░░░░   0%
 Phase 7 — Database Inventory        ░░░░░░░░░░   0%
@@ -656,9 +659,9 @@ Current development path:
 
 YOU ARE HERE
      ↓
-Seller Authentication (production verification)
+Seller Authentication ✅
      ↓
-Seller Dashboard
+Seller Dashboard ← YOU ARE HERE
      ↓
 Add/Edit Listing
      ↓
@@ -701,16 +704,22 @@ Potential Full Marketplace
 
 # Next Milestone
 
-## Production Authentication Verification
+## Seller Dashboard Foundation
 
-Before beginning the dashboard, verify in production:
+Production authentication verification is complete:
 
-- Create a seller account and receive the confirmation email
-- Follow the confirmation link and reach `/seller`
-- Verify the `profiles` trigger creates the matching profile with the display name
-- Log in, refresh/navigate, and confirm the session persists
-- Log out and confirm `/seller` redirects back to login
+- Seller sign-up and Resend confirmation email
+- Email confirmation callback to `/seller`
+- Automatic `profiles` row creation with display name
+- Seller login and persistent session
+- Protected seller routes and authentication redirects
+- Seller logout
 
-After these checks pass:
+Next implementation target:
+
+- Build the seller dashboard layout
+- Query and display only the authenticated seller's listings
+- Add empty, loading, and error states
+- Preserve the existing public website and demo inventory
 
 **Begin Seller Dashboard.**
