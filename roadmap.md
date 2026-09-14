@@ -391,6 +391,10 @@ display:
 - [x] Verify production metadata, canonical URLs, robots and sitemap responses
 - [x] Verify active listing Product JSON-LD, Open Graph image and X/Twitter image
 - [x] Restore and record the public active-listing Storage image policy
+- [x] Add stable first-party URLs for public active-listing images
+- [x] Keep public image delivery governed by active-listing RLS
+- [x] Regenerate slugs while a listing remains a private draft
+- [x] Freeze slugs after first publication to preserve indexed URLs
 - [ ] Validate an active listing with Google Rich Results Test
 - [ ] Connect Google Search Console and submit sitemap
 

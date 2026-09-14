@@ -1,6 +1,5 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
@@ -19,6 +18,7 @@ import {
   storageTypes,
 } from "@/lib/listing-options";
 import { requireApprovedAccount } from "@/lib/account-access";
+import { createListingSlug } from "@/lib/listing-slug";
 
 export type ListingActionState = {
   error?: string;
@@ -35,17 +35,6 @@ function field(formData: FormData, name: string) {
 
 function optional(value: string) {
   return value || null;
-}
-
-function slugify(value: string) {
-  const base = value
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 72) || "computer";
-  return `${base}-${randomUUID().slice(0, 8)}`;
 }
 
 function buildListingTitle(values: {
@@ -196,9 +185,22 @@ export async function createListing(
   };
 
   if (listingId) {
+    const { data: existing } = await supabase
+      .from("listings")
+      .select("status")
+      .eq("id", listingId)
+      .eq("seller_id", sellerId)
+      .maybeSingle();
+    if (!existing || !["draft", "active", "expired"].includes(String(existing.status))) {
+      return { error: "We couldn't update this listing. It may no longer be editable." };
+    }
+
     const { data, error } = await supabase
       .from("listings")
-      .update(listingValues)
+      .update({
+        ...listingValues,
+        ...(existing.status === "draft" ? { slug: createListingSlug(title) } : {}),
+      })
       .eq("id", listingId)
       .eq("seller_id", sellerId)
       .in("status", ["draft", "active", "expired"])
@@ -213,7 +215,7 @@ export async function createListing(
   const { error } = await supabase.from("listings").insert({
     ...listingValues,
     seller_id: sellerId,
-    slug: slugify(title),
+    slug: createListingSlug(title),
     original_price_cents: priceCents,
     status: "draft",
   });

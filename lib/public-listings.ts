@@ -19,11 +19,18 @@ type ListingRow = {
 };
 
 type ImageRow = {
+  id: string;
   listing_id: string;
   storage_path: string;
   sort_order: number;
   is_primary: boolean;
 };
+
+const siteUrl = "https://www.cyberelay.ca";
+
+function activeImageUrl(imageId: string) {
+  return `${siteUrl}/images/listings/${imageId}`;
+}
 
 const conditionLabels: Record<string, string> = {
   new: "New", like_new: "Like New", excellent: "Excellent",
@@ -83,19 +90,13 @@ async function attachImages(
   const ids = rows.map((row) => row.id);
   const { data } = await supabase
     .from("listing_images")
-    .select("listing_id,storage_path,sort_order,is_primary")
+    .select("id,listing_id,storage_path,sort_order,is_primary")
     .in("listing_id", ids)
     .order("sort_order", { ascending: true });
   const imageRows = (data ?? []) as ImageRow[];
-  const paths = imageRows.map((image) => image.storage_path);
-  const { data: signedRows } = paths.length
-    ? await supabase.storage.from("listing-images").createSignedUrls(paths, 3600)
-    : { data: [] };
-
   const imagesByListing = new Map<string, Array<{ url: string; primary: boolean; order: number }>>();
-  imageRows.forEach((image, index) => {
-    const url = signedRows?.[index]?.signedUrl;
-    if (!url) return;
+  imageRows.forEach((image) => {
+    const url = activeImageUrl(image.id);
     const list = imagesByListing.get(image.listing_id) ?? [];
     list.push({ url, primary: image.is_primary, order: image.sort_order });
     imagesByListing.set(image.listing_id, list);
