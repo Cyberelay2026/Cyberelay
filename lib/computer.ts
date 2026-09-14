@@ -1,0 +1,23 @@
+export type PublicComputer = {
+  id: string;
+  slug: string;
+  brand: string;
+  model: string;
+  cpu: string;
+  ram: number;
+  storage: number;
+  storageType: string;
+  gpu: string;
+  display: string;
+  os: string;
+  condition: string;
+  batteryHealth: number | null;
+  price: number;
+  city: string;
+  province: string;
+  description: string;
+  cosmeticNotes: string;
+  marketplaceUrl: string;
+  image: string;
+  images: string[];
+};
