@@ -15,11 +15,41 @@ export type ListingImage = {
 
 const MAX_IMAGES = 8;
 const MAX_BYTES = 5 * 1024 * 1024;
-const imageTypes: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
+const acceptedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+const MAX_DIMENSION = 1600;
+const WEBP_QUALITY = 0.82;
+
+async function optimizeAsWebp(file: File) {
+  const objectUrl = URL.createObjectURL(file);
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const element = new Image();
+      element.onload = () => resolve(element);
+      element.onerror = () => reject(new Error("Image decoding failed"));
+      element.src = objectUrl;
+    });
+    const scale = Math.min(1, MAX_DIMENSION / Math.max(image.naturalWidth, image.naturalHeight));
+    const width = Math.max(1, Math.round(image.naturalWidth * scale));
+    const height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Canvas is unavailable");
+    context.drawImage(image, 0, 0, width, height);
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/webp", WEBP_QUALITY),
+    );
+    if (!blob || blob.type !== "image/webp") throw new Error("WebP conversion failed");
+    return new File([blob], "optimized.webp", {
+      type: "image/webp",
+      lastModified: Date.now(),
+    });
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
 
 export function ListingImageManager({
   listingId,
@@ -39,7 +69,7 @@ export function ListingImageManager({
     const files = formData.getAll("images").filter((value): value is File => value instanceof File && value.size > 0);
     if (!files.length) return setMessage("Choose at least one image.");
     if (images.length + files.length > MAX_IMAGES) return setMessage(`A listing can have up to ${MAX_IMAGES} images.`);
-    const invalid = files.find((file) => !imageTypes[file.type] || file.size > MAX_BYTES);
+    const invalid = files.find((file) => !acceptedImageTypes.has(file.type) || file.size > MAX_BYTES);
     if (invalid) return setMessage("Use JPEG, PNG or WebP images no larger than 5 MB each.");
 
     setBusy(true);
@@ -48,10 +78,20 @@ export function ListingImageManager({
     let nextOrder = images.reduce((max, image) => Math.max(max, image.sort_order), -1) + 1;
 
     for (const file of files) {
-      const path = `${sellerId}/${listingId}/${crypto.randomUUID()}.${imageTypes[file.type]}`;
+      let optimizedFile: File;
+      try {
+        optimizedFile = await optimizeAsWebp(file);
+      } catch {
+        setMessage("An image could not be optimized. Try a different image.");
+        setBusy(false);
+        router.refresh();
+        return;
+      }
+
+      const path = `${sellerId}/${listingId}/${crypto.randomUUID()}.webp`;
       const { error: uploadError } = await supabase.storage
         .from("listing-images")
-        .upload(path, file, { contentType: file.type, upsert: false });
+        .upload(path, optimizedFile, { contentType: "image/webp", upsert: false });
 
       if (uploadError) {
         setMessage("An image could not be uploaded. Please try again.");
@@ -78,7 +118,7 @@ export function ListingImageManager({
     }
 
     if (inputRef.current) inputRef.current.value = "";
-    setMessage("Images uploaded successfully.");
+    setMessage("Images optimized as WebP and uploaded successfully.");
     setBusy(false);
     router.refresh();
   }
@@ -147,7 +187,7 @@ export function ListingImageManager({
         <div>
           <span className="eyebrow">LISTING IMAGES</span>
           <h2 id="listing-images-heading">Computer photos</h2>
-          <p>Upload up to eight JPEG, PNG or WebP images. Maximum 5 MB each.</p>
+          <p>Upload up to eight JPEG, PNG or WebP images. Each file is resized to 1,600px maximum and converted to WebP before upload.</p>
         </div>
         <strong>{images.length}/{MAX_IMAGES}</strong>
       </div>
