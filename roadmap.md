@@ -16,7 +16,7 @@ Current stage:
 
 Current milestone:
 
-**Listing Images implementation and production verification**
+**Database-driven Inventory implementation and production verification**
 
 Progress legend:
 
@@ -326,11 +326,11 @@ This is the point where demo/hard-coded inventory is removed.
 
 ## 7.1 Inventory Migration
 
-- [ ] Replace `data/computers.ts`
-- [ ] Query active listings from Supabase
-- [ ] Update `/computers`
-- [ ] Update computer detail pages
-- [ ] Handle loading/error/empty states
+- [x] Replace `data/computers.ts`
+- [x] Query active listings from Supabase
+- [x] Update `/computers`
+- [x] Update computer detail pages
+- [x] Handle server error and empty states
 
 ## 7.2 Dynamic Filters
 
@@ -346,16 +346,16 @@ display:
 
 `256GB / 512GB / 1TB`
 
-- [ ] Dynamic brand options
-- [ ] Dynamic CPU options
-- [ ] Dynamic RAM options
-- [ ] Dynamic storage options
-- [ ] Dynamic condition options
+- [x] Dynamic brand options
+- [x] Dynamic CPU options
+- [x] Dynamic RAM options
+- [x] Dynamic storage options
+- [x] Dynamic condition options
 - [ ] Dynamic location options where appropriate
-- [ ] Preserve AND filter logic
-- [ ] Preserve clear/reset filters
+- [x] Preserve AND filter logic
+- [x] Preserve clear/reset filters
 
-**Status: ⬜ Planned**
+**Status: 🟡 Current / In Progress — implementation complete; production verification pending**
 
 ---
 
@@ -661,8 +661,8 @@ Phase 2 — Infrastructure            ██████████ 100%
 Phase 3 — Seller Authentication     ██████████ 100%
 Phase 4 — Seller Dashboard          █████████░  90%
 Phase 5 — Structured Listing Form   █████████░  90%  ← VERIFY IN PRODUCTION
-Phase 6 — Images                    █████████░  90%  ← CURRENT
-Phase 7 — Database Inventory        ░░░░░░░░░░   0%
+Phase 6 — Images                    █████████░  90%
+Phase 7 — Database Inventory        ████████░░  80%  ← CURRENT
 Phase 8 — Listing Freshness         ░░░░░░░░░░   0%
 
 Current development path:
@@ -671,7 +671,7 @@ YOU ARE HERE
      ↓
 Seller Authentication ✅
      ↓
-Seller Dashboard ← YOU ARE HERE
+Seller Dashboard
      ↓
 Structured Add Listing
      ↓
@@ -679,7 +679,7 @@ Edit / Publish / Mark Sold
      ↓
 Photo Upload
      ↓
-Database-Driven Inventory
+Database-Driven Inventory ← YOU ARE HERE
      ↓
 SEO & AI Discovery Foundation
      ↓
@@ -812,3 +812,31 @@ Production tests required:
 - [ ] Confirm another seller cannot view or modify private listing images
 
 **After WebP and isolation verification, begin Database-driven Inventory.**
+
+Database-driven Inventory implementation now includes:
+
+- Server-side queries for active Supabase listings only
+- Public inventory mapping from normalized database fields
+- Private Storage images delivered with short-lived signed URLs
+- Homepage, `/computers`, and dynamic detail pages backed by Supabase
+- Dynamic brand, CPU, RAM, storage, and condition filter values
+- Existing AND filtering and Clear filters behaviour
+- Public error, zero-inventory, and no-match states
+- Hard-coded demo inventory removed
+
+Required production configuration:
+
+- [ ] Add public Storage SELECT policy restricted to active listings
+
+Production tests required:
+
+- [ ] Homepage shows only active database listings
+- [ ] `/computers` shows only active database listings
+- [ ] Draft, sold, expired, and archived listings remain private
+- [ ] Primary images display publicly through signed URLs
+- [ ] Dynamic filters and AND logic return correct results
+- [ ] Clear filters and no-match state work
+- [ ] Active computer detail page loads by database slug
+- [ ] Facebook Marketplace outbound link works
+
+**After verification, complete remaining image isolation and begin SEO & AI Discovery Foundation.**
