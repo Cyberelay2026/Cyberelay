@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   brands, conditions, cpuFamilies, gpuBrands, gpuTypes, osFamilies, provinces,
   ramOptions, resolutions, screenSizes, storageOptions, storageTypes,
@@ -13,7 +13,12 @@ const storageLabel = (value: number) => value >= 1024 ? `${value / 1024}TB` : `$
 
 export function ListingForm() {
   const [state, action, pending] = useActionState(createListing, initialState);
+  const [cpuBrand, setCpuBrand] = useState("");
   const error = (name: string) => state.fieldErrors?.[name];
+  const cpuFamilyOptions: ReadonlyArray<readonly [string, string]> =
+    cpuBrand in cpuFamilies
+      ? cpuFamilies[cpuBrand as keyof typeof cpuFamilies].map((family) => [family, family] as const)
+      : [];
 
   return (
     <form action={action} className={styles.form}>
@@ -25,7 +30,6 @@ export function ListingForm() {
       )}
 
       <fieldset><legend>Computer basics</legend><div className={styles.grid}>
-        <Field label="Listing title" name="title" error={error("title")} wide><input name="title" required minLength={5} maxLength={120} placeholder="e.g. Lenovo ThinkPad T14 Gen 2" /></Field>
         <Select label="Brand" name="brand" error={error("brand")} options={brands.map((v) => [v, v])} />
         <Field label="Model" name="model" error={error("model")}><input name="model" required maxLength={100} placeholder="ThinkPad T14 Gen 2" /></Field>
         <Select label="Condition" name="condition" error={error("condition")} options={conditions} />
@@ -33,8 +37,8 @@ export function ListingForm() {
       </div></fieldset>
 
       <fieldset><legend>Processor and memory</legend><div className={styles.grid}>
-        <Select label="CPU brand" name="cpu_brand" error={error("cpu_brand")} options={Object.keys(cpuFamilies).map((v) => [v, v])} />
-        <Select label="CPU family" name="cpu_family" error={error("cpu_family")} options={Object.entries(cpuFamilies).flatMap(([brand, families]) => families.map((family) => [family, `${brand} — ${family}`]))} />
+        <Select label="CPU brand" name="cpu_brand" error={error("cpu_brand")} options={Object.keys(cpuFamilies).map((v) => [v, v])} onChange={(event) => setCpuBrand(event.target.value)} />
+        <Select label="CPU family" name="cpu_family" error={error("cpu_family")} options={cpuFamilyOptions} disabled={!cpuBrand} resetKey={cpuBrand || "none"} />
         <Field label="CPU model" name="cpu_model" error={error("cpu_model")}><input name="cpu_model" required maxLength={100} placeholder="e.g. i5-1135G7" /></Field>
         <Select label="RAM" name="ram_gb" error={error("ram_gb")} options={ramOptions.map((v) => [String(v), `${v}GB`])} />
       </div></fieldset>
@@ -76,6 +80,17 @@ function Field({ label, name, error, wide, children }: { label:string;name:strin
   return <label className={wide ? styles.wide : undefined}><span>{label}</span>{children}{error && <small className={styles.fieldError}>{error}</small>}</label>;
 }
 
-function Select({ label, name, error, options, optional=false }: { label:string;name:string;error?:string;options:ReadonlyArray<readonly [string,string]>;optional?:boolean }) {
-  return <label><span>{label}</span><select name={name} required={!optional} defaultValue=""><option value="">{optional ? "Not specified" : "Select one"}</option>{options.map(([value,text]) => <option value={value} key={`${name}-${value}`}>{text}</option>)}</select>{error && <small className={styles.fieldError}>{error}</small>}</label>;
+function Select({
+  label, name, error, options, optional = false, disabled = false, onChange, resetKey,
+}: {
+  label: string;
+  name: string;
+  error?: string;
+  options: ReadonlyArray<readonly [string, string]>;
+  optional?: boolean;
+  disabled?: boolean;
+  onChange?: React.ChangeEventHandler<HTMLSelectElement>;
+  resetKey?: string;
+}) {
+  return <label><span>{label}</span><select key={resetKey} name={name} required={!optional} defaultValue="" disabled={disabled} onChange={onChange}><option value="">{disabled ? "Select CPU brand first" : optional ? "Not specified" : "Select one"}</option>{options.map(([value,text]) => <option value={value} key={`${name}-${value}`}>{text}</option>)}</select>{error && <small className={styles.fieldError}>{error}</small>}</label>;
 }
