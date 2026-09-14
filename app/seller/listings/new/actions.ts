@@ -105,6 +105,7 @@ export async function createListing(
   _previousState: ListingActionState,
   formData: FormData,
 ): Promise<ListingActionState> {
+  const listingId = field(formData, "listing_id");
   const values = {
     brand: field(formData, "brand"),
     model: field(formData, "model"), cpu_brand: field(formData, "cpu_brand"),
@@ -168,10 +169,8 @@ export async function createListing(
     ? values.resolution.split("x").map(Number)
     : [null, null];
   const title = buildListingTitle(values);
-  const { error } = await supabase.from("listings").insert({
-    seller_id: sellerId,
+  const listingValues = {
     title,
-    slug: slugify(title),
     brand: values.brand,
     model: values.model,
     cpu_brand: values.cpu_brand,
@@ -193,11 +192,32 @@ export async function createListing(
     battery_health_percent: battery,
     description: optional(values.description),
     cosmetic_notes: optional(values.cosmetic_notes),
-    original_price_cents: priceCents,
     price_cents: priceCents,
     city: values.city,
     province: values.province,
     facebook_marketplace_url: values.facebook_marketplace_url,
+  };
+
+  if (listingId) {
+    const { data, error } = await supabase
+      .from("listings")
+      .update(listingValues)
+      .eq("id", listingId)
+      .eq("seller_id", sellerId)
+      .in("status", ["draft", "active", "expired"])
+      .select("id")
+      .maybeSingle();
+
+    if (error || !data) return { error: "We couldn't update this listing. It may no longer be editable." };
+    revalidatePath("/seller");
+    redirect("/seller?updated=1");
+  }
+
+  const { error } = await supabase.from("listings").insert({
+    ...listingValues,
+    seller_id: sellerId,
+    slug: slugify(title),
+    original_price_cents: priceCents,
     status: "draft",
   });
 
