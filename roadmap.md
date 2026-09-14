@@ -16,7 +16,7 @@ Current stage:
 
 Current milestone:
 
-**Database-driven Inventory implementation and production verification**
+**SEO & AI Discovery Foundation**
 
 Progress legend:
 
@@ -355,7 +355,7 @@ display:
 - [x] Preserve AND filter logic
 - [x] Preserve clear/reset filters
 
-**Status: 🟡 Current / In Progress — implementation complete; production verification pending**
+**Status: ✅ Core complete — dynamic location filtering remains a planned enhancement**
 
 ---
 
@@ -662,7 +662,7 @@ Phase 3 — Seller Authentication     ██████████ 100%
 Phase 4 — Seller Dashboard          █████████░  90%
 Phase 5 — Structured Listing Form   █████████░  90%  ← VERIFY IN PRODUCTION
 Phase 6 — Images                    █████████░  90%
-Phase 7 — Database Inventory        ████████░░  80%  ← CURRENT
+Phase 7 — Database Inventory        █████████░  95%
 Phase 8 — Listing Freshness         ░░░░░░░░░░   0%
 
 Current development path:
@@ -679,9 +679,9 @@ Edit / Publish / Mark Sold
      ↓
 Photo Upload
      ↓
-Database-Driven Inventory ← YOU ARE HERE
+Database-Driven Inventory ✅
      ↓
-SEO & AI Discovery Foundation
+SEO & AI Discovery Foundation ← YOU ARE HERE
      ↓
 Acquisition / Analytics
      ↓
@@ -826,17 +826,17 @@ Database-driven Inventory implementation now includes:
 
 Required production configuration:
 
-- [ ] Add public Storage SELECT policy restricted to active listings
+- [x] Add public Storage SELECT policy restricted to active listings
 
 Production tests required:
 
-- [ ] Homepage shows only active database listings
-- [ ] `/computers` shows only active database listings
-- [ ] Draft, sold, expired, and archived listings remain private
-- [ ] Primary images display publicly through signed URLs
-- [ ] Dynamic filters and AND logic return correct results
-- [ ] Clear filters and no-match state work
-- [ ] Active computer detail page loads by database slug
-- [ ] Facebook Marketplace outbound link works
+- [x] Homepage shows only active database listings
+- [x] `/computers` shows only active database listings
+- [x] Draft, sold, expired, and archived listings remain private
+- [x] Primary images display publicly through signed URLs
+- [x] Dynamic filters and AND logic return correct results
+- [x] Clear filters and no-match state work
+- [x] Active computer detail page loads by database slug
+- [x] Facebook Marketplace outbound link works
 
-**After verification, complete remaining image isolation and begin SEO & AI Discovery Foundation.**
+**Production verification complete. Next: SEO & AI Discovery Foundation, while retaining cross-seller image isolation as a security test backlog item.**
