@@ -313,9 +313,9 @@ Seller-entered free text must not directly create filter values.
 - [x] Image ordering
 - [x] File-type validation
 - [x] File-size limits
-- [ ] Image optimization strategy
+- [x] Browser-side resize and WebP conversion strategy
 
-**Status: 🟡 Current / In Progress — core production flow verified; isolation and optimization pending**
+**Status: 🟡 Current / In Progress — core flow verified; WebP and isolation production tests pending**
 
 ---
 
@@ -789,6 +789,8 @@ Listing Images implementation now includes:
 - Upload, delete, primary-image selection, and ordering controls
 - Automatic primary fallback after deleting the primary image
 - Primary image displayed on the seller dashboard
+- Browser-side resize to a maximum 1,600px dimension
+- Automatic WebP conversion at 0.82 quality before Storage upload
 - No public inventory migration and no service-role key
 
 Production tests required:
@@ -801,6 +803,9 @@ Production tests required:
 - [x] Reorder images
 - [x] Delete a primary and non-primary image
 - [x] Confirm the dashboard displays the primary image
+- [ ] Confirm a new JPEG or PNG upload is stored as `.webp`
+- [ ] Confirm an image larger than 1,600px is resized correctly
+- [ ] Confirm portrait orientation and acceptable visual quality
 - [ ] Confirm another seller cannot view or modify private listing images
 
-**After verification, complete image optimization planning and begin Database-driven Inventory.**
+**After WebP and isolation verification, begin Database-driven Inventory.**
