@@ -72,3 +72,67 @@ export async function markListingSold(formData: FormData) {
   revalidatePath("/seller");
   redirect("/seller?sold=1");
 }
+
+export async function archiveListing(formData: FormData) {
+  const id = listingId(formData);
+  if (!id) redirect("/seller?error=listing-action");
+
+  const { supabase, sellerId } = await authenticatedSeller();
+  const { data, error } = await supabase
+    .from("listings")
+    .update({ status: "archived" })
+    .eq("id", id)
+    .eq("seller_id", sellerId)
+    .in("status", ["draft", "active", "expired"])
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) redirect("/seller?error=listing-action");
+  revalidatePath("/seller");
+  redirect("/seller?archived=1");
+}
+
+export async function restoreArchivedListing(formData: FormData) {
+  const id = listingId(formData);
+  if (!id) redirect("/seller?error=listing-action");
+
+  const { supabase, sellerId } = await authenticatedSeller();
+  const { data, error } = await supabase
+    .from("listings")
+    .update({
+      status: "draft",
+      published_at: null,
+      availability_confirmed_at: null,
+    })
+    .eq("id", id)
+    .eq("seller_id", sellerId)
+    .eq("status", "archived")
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) redirect("/seller?error=listing-action");
+  revalidatePath("/seller");
+  redirect("/seller?restored=1");
+}
+
+export async function reactivateExpiredListing(formData: FormData) {
+  const id = listingId(formData);
+  if (!id) redirect("/seller?error=listing-action");
+
+  const { supabase, sellerId } = await authenticatedSeller();
+  const { data, error } = await supabase
+    .from("listings")
+    .update({
+      status: "active",
+      availability_confirmed_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .eq("seller_id", sellerId)
+    .eq("status", "expired")
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) redirect("/seller?error=listing-action");
+  revalidatePath("/seller");
+  redirect("/seller?reactivated=1");
+}
