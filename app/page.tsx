@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { Search, ShieldCheck, SlidersHorizontal, ExternalLink } from "lucide-react";
 import { ComputerCard } from "@/components/computer-card";
-import { computers } from "@/data/computers";
+import { getPublicComputers } from "@/lib/public-listings";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const { computers } = await getPublicComputers();
+  const featured = computers.slice(0, 3);
   return (
     <main>
       <section className="hero">
@@ -36,7 +40,9 @@ export default function Home() {
             <Link href="/computers">View all →</Link>
           </div>
           <div className="card-grid">
-            {computers.map((computer) => <ComputerCard computer={computer} key={computer.id} />)}
+            {featured.length ? featured.map((computer) => <ComputerCard computer={computer} key={computer.id} />) : (
+              <div className="empty-state"><h3>No computers available yet</h3><p>Check back soon for newly published listings.</p></div>
+            )}
           </div>
         </div>
       </section>
