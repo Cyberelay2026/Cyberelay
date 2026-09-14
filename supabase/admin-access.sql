@@ -260,6 +260,22 @@ using (
   )
 );
 
+-- Public pages may read only image objects attached to active listings. The
+-- bucket remains private and every other listing status remains inaccessible.
+drop policy if exists "cyberelay_public_active_listing_images" on storage.objects;
+create policy "cyberelay_public_active_listing_images"
+on storage.objects for select to anon, authenticated
+using (
+  bucket_id = 'listing-images'
+  and exists (
+    select 1
+    from public.listing_images
+    join public.listings on listings.id = listing_images.listing_id
+    where listing_images.storage_path = storage.objects.name
+      and listings.status = 'active'
+  )
+);
+
 -- Designate the first Cyberelay administrator.
 update public.profiles p
 set role = 'admin', account_status = 'approved', updated_at = now()
