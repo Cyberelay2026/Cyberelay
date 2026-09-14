@@ -739,7 +739,8 @@ Before Edit / Publish / Mark Sold, verify in production:
 
 - [x] Create a draft from `/seller/listings/new`
 - [ ] Confirm the draft belongs to the authenticated seller
-- [ ] Confirm another seller cannot read or modify the draft
+- [x] Confirm another seller cannot open the seller-owned edit page (404)
+- [ ] Confirm another seller cannot directly modify the draft
 - [ ] Confirm dashboard draft count, price, status, dates, and location
 - [ ] Confirm invalid data is rejected without creating a row
 
@@ -757,7 +758,8 @@ Production tests still required:
 - [x] Edit a seller-owned draft and confirm dashboard changes
 - [x] Publish a draft and confirm active status and published date
 - [x] Mark an active listing sold and confirm sold price/date
-- [ ] Confirm another seller cannot edit, publish, or mark the listing sold
+- [x] Confirm another seller cannot access the listing edit route (404)
+- [ ] Confirm another seller cannot directly publish, archive, reactivate, or mark the listing sold
 - [ ] Confirm sold and archived listings cannot be edited
 
 Archive / Reactivate implementation now includes:
