@@ -770,9 +770,9 @@ Archive / Reactivate implementation now includes:
 
 Production tests required:
 
-- [ ] Archive a draft and confirm the archived count
-- [ ] Restore an archived listing and confirm it becomes a private draft
-- [ ] Archive an active listing
+- [x] Archive a draft and confirm the archived count
+- [x] Restore an archived listing and confirm it becomes a private draft
+- [x] Archive an active listing
 - [x] Reactivate an expired listing
 - [ ] Confirm another seller cannot perform any lifecycle action
 
