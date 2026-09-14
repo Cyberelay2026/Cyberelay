@@ -1,0 +1,113 @@
+.auth-page {
+  min-height: calc(100vh - 225px);
+}
+.auth-shell {
+  display: flex;
+  justify-content: center;
+}
+.auth-card {
+  width: min(100%, 520px);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 34px;
+  box-shadow: 0 14px 34px rgba(16, 24, 40, 0.06);
+}
+.auth-card h1 {
+  font-size: 2.35rem;
+  letter-spacing: -0.045em;
+  margin: 10px 0;
+}
+.auth-card > p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+.auth-form {
+  display: grid;
+  gap: 17px;
+  margin-top: 26px;
+}
+.auth-form label {
+  display: grid;
+  gap: 7px;
+  font-size: 0.85rem;
+  font-weight: 750;
+  color: #475467;
+}
+.auth-form input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+  color: var(--ink);
+}
+.auth-form input:focus {
+  outline: 3px solid var(--soft);
+  border-color: #9cb5f1;
+}
+.auth-submit {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  margin-top: 3px;
+}
+.auth-submit:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+.auth-message {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: 0;
+}
+.auth-error {
+  background: #fff1f1;
+  border: 1px solid #f2c7c7;
+  color: #9a2727;
+}
+.auth-success {
+  background: #edf8f1;
+  border: 1px solid #b9dec7;
+  color: #25633d;
+}
+.auth-switch {
+  text-align: center;
+  font-size: 0.9rem;
+}
+.auth-switch a {
+  color: var(--accent);
+  font-weight: 750;
+}
+.seller-placeholder {
+  margin-top: 30px;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+.seller-placeholder p {
+  color: var(--muted);
+  margin: 7px 0 0;
+}
+.seller-placeholder button {
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 620px) {
+  .auth-card {
+    padding: 24px;
+  }
+  .seller-placeholder {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
