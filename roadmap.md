@@ -311,6 +311,7 @@ Seller-entered free text must not directly create filter values.
 - [x] Multiple images per listing
 - [x] Primary image
 - [x] Image ordering
+- [x] Bulk image selection and deletion
 - [x] File-type validation
 - [x] File-size limits
 - [x] Browser-side resize and WebP conversion strategy
@@ -786,7 +787,7 @@ Listing Images implementation now includes:
 - Seller/listing-scoped Storage paths and existing RLS enforcement
 - Up to eight images per listing
 - Server-generated short-lived signed image URLs
-- Upload, delete, primary-image selection, and ordering controls
+- Upload, single/bulk delete, primary-image selection, and ordering controls
 - Automatic primary fallback after deleting the primary image
 - Primary image displayed on the seller dashboard
 - Browser-side resize to a maximum 1,600px dimension
@@ -803,7 +804,8 @@ Production tests required:
 - [x] Reorder images
 - [x] Delete a primary and non-primary image
 - [x] Confirm the dashboard displays the primary image
-- [ ] Confirm a new JPEG or PNG upload is stored as `.webp`
+- [x] Confirm a new JPEG or PNG upload is stored as `.webp`
+- [ ] Select and delete multiple images in one action
 - [ ] Confirm an image larger than 1,600px is resized correctly
 - [ ] Confirm portrait orientation and acceptable visual quality
 - [ ] Confirm another seller cannot view or modify private listing images
