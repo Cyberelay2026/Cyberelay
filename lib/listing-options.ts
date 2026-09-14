@@ -17,7 +17,7 @@ export const brands = [
 export const cpuFamilies = {
   Intel: ["Core i3", "Core i5", "Core i7", "Core i9", "Core Ultra 5", "Core Ultra 7", "Core Ultra 9", "Celeron", "Pentium", "Xeon"],
   AMD: ["Ryzen 3", "Ryzen 5", "Ryzen 7", "Ryzen 9", "Ryzen AI 5", "Ryzen AI 7", "Ryzen AI 9", "Athlon"],
-  Apple: ["M1", "M2", "M3", "M4", "M5"],
+  Apple: ["M1", "M1 Pro", "M1 Max", "M1 Ultra", "M2", "M2 Pro", "M2 Max", "M2 Ultra", "M3", "M3 Pro", "M3 Max", "M3 Ultra", "M4", "M4 Pro", "M4 Max", "M5", "M5 Pro", "M5 Max", "M5 Ultra", "M6"],
   Qualcomm: ["Snapdragon X", "Snapdragon X Plus", "Snapdragon X Elite"],
 } as const;
 
