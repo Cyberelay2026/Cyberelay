@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./auth.css";
 import { Header } from "@/components/header";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.cyberelay.ca"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Cyberelay | Used Computers in Calgary",
     template: "%s | Cyberelay",
   },
-  description: "Find used laptops and computers in Calgary with clear specifications, condition details and prices.",
+  description: "Find used laptops and computers for sale in Calgary. Compare specifications, condition and prices before contacting the seller on Marketplace.",
   applicationName: "Cyberelay",
   alternates: { canonical: "/" },
   openGraph: {
@@ -18,12 +19,12 @@ export const metadata: Metadata = {
     siteName: "Cyberelay",
     url: "/",
     title: "Cyberelay | Used Computers in Calgary",
-    description: "Find used laptops and computers with clear specifications, condition details and prices.",
+    description: "Find used laptops and computers for sale in Calgary and compare specifications, condition and prices.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Cyberelay | Used Computers in Calgary",
-    description: "Find used laptops and computers with clear specifications, condition details and prices.",
+    description: "Find used laptops and computers for sale in Calgary and compare specifications, condition and prices.",
   },
 };
 
