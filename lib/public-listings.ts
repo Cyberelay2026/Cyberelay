@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { PublicComputer } from "@/lib/computer";
+import { SITE_URL } from "@/lib/site";
 
 const listingSelect = "id,slug,brand,model,cpu_brand,cpu_family,cpu_model,ram_gb,storage_gb,storage_type,gpu_type,gpu_brand,gpu_model,screen_size_inches,resolution_width,resolution_height,os_family,os_version,os_edition,condition,battery_health_percent,description,cosmetic_notes,price_cents,city,province,facebook_marketplace_url,published_at";
 
@@ -26,10 +27,8 @@ type ImageRow = {
   is_primary: boolean;
 };
 
-const siteUrl = "https://www.cyberelay.ca";
-
 function activeImageUrl(imageId: string) {
-  return `${siteUrl}/images/listings/${imageId}`;
+  return `${SITE_URL}/images/listings/${imageId}`;
 }
 
 const conditionLabels: Record<string, string> = {

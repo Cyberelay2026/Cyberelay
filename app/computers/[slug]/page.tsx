@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ExternalLink, MapPin, Battery, CheckCircle2 } from "lucide-react";
 import { getPublicComputer } from "@/lib/public-listings";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -56,7 +57,7 @@ export default async function ComputerDetail({ params }: PageProps) {
     itemCondition: schemaCondition(computer.condition),
     offers: {
       "@type": "Offer",
-      url: `https://www.cyberelay.ca/computers/${computer.slug}`,
+      url: `${SITE_URL}/computers/${computer.slug}`,
       priceCurrency: "CAD",
       price: computer.price.toFixed(2),
       availability: "https://schema.org/InStock",
@@ -94,7 +95,7 @@ export default async function ComputerDetail({ params }: PageProps) {
               <span><MapPin size={18}/>{computer.city}, {computer.province}</span>
               {computer.batteryHealth !== null && <span><Battery size={18}/>{computer.batteryHealth}% battery health</span>}
             </div>
-            <a className="button button-wide" href={computer.marketplaceUrl} target="_blank" rel="noreferrer">View on Facebook Marketplace <ExternalLink size={17}/></a>
+            <a className="button button-wide" href={computer.marketplaceUrl} target="_blank" rel="noreferrer">Contact seller on Marketplace <ExternalLink size={17}/></a>
             <p className="fine-print">You will leave Cyberelay and continue on Facebook Marketplace.</p>
           </aside>
         </div>
@@ -102,6 +103,10 @@ export default async function ComputerDetail({ params }: PageProps) {
         <div className="info-grid">
           <section className="info-card"><h2>Specifications</h2><dl className="spec-list"><div><dt>Processor</dt><dd>{computer.cpu}</dd></div><div><dt>Memory</dt><dd>{computer.ram}GB</dd></div><div><dt>Storage</dt><dd>{storageLabel(computer.storage)} {computer.storageType}</dd></div><div><dt>Graphics</dt><dd>{computer.gpu}</dd></div><div><dt>Display</dt><dd>{computer.display}</dd></div><div><dt>Operating system</dt><dd>{computer.os}</dd></div></dl></section>
           <section className="info-card"><h2>Condition</h2><div className="condition-line"><CheckCircle2/><div><strong>{computer.condition}</strong><p>{computer.description}</p>{computer.cosmeticNotes && <p>{computer.cosmeticNotes}</p>}</div></div>{computer.batteryHealth !== null && <dl className="spec-list compact"><div><dt>Battery health</dt><dd>{computer.batteryHealth}%</dd></div></dl>}</section>
+        </div>
+        <div className="mobile-contact-bar">
+          <div><span>Asking price</span><strong>${computer.price.toLocaleString()} CAD</strong></div>
+          <a className="button" href={computer.marketplaceUrl} target="_blank" rel="noreferrer">Contact seller</a>
         </div>
       </div>
     </main>

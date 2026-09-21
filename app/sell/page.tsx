@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function SellPage() {
-  return <main className="section"><div className="container narrow"><div className="eyebrow">SELL ON CYBERELAY</div><h1>Seller listing tools are next.</h1><p className="lead">V1 public browsing is ready first. The next build adds seller accounts, photo uploads, structured specs, Facebook Marketplace URLs, editing and Mark as Sold.</p><div className="notice">This page is intentionally reserved for the Seller Dashboard milestone.</div></div></main>;
+  return <main className="section"><div className="container narrow"><div className="eyebrow">SELL ON CYBERELAY</div><h1>Put your computer in front of buyers searching by specs.</h1><p className="lead">Create a structured listing with photos, condition, price and the details buyers care about. Add your Facebook Marketplace URL so interested buyers can contact you through your existing listing.</p><div className="hero-actions"><a className="button" href="/seller/signup">Create seller account</a><a className="button button-outline" href="/seller/login">Seller login</a></div><div className="notice">Cyberelay does not process payments or shipping. You remain responsible for your Marketplace listing and transaction.</div></div></main>;
 }

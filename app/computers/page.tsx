@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Browse Used Computers",
-  description: "Browse used laptops and computers in Calgary by brand, processor, RAM, storage, condition and price.",
+  title: "Used Laptops & Computers in Calgary",
+  description: "Find used laptops and computers for sale in Calgary. Compare price, processor, RAM, storage and condition, then contact the seller on Marketplace.",
   alternates: { canonical: "/computers" },
 };
 
