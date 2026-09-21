@@ -6,11 +6,11 @@ export function Header() {
       <div className="container nav-wrap">
         <Link className="brand" href="/">CYBERELAY</Link>
         <nav className="nav-links" aria-label="Primary navigation">
-          <Link href="/computers">Computers</Link>
+          <Link href="/computers">Browse</Link>
           <Link href="/sell">Sell</Link>
           <Link href="/about">About</Link>
         </nav>
-        <Link className="button button-small button-outline" href="/computers">Browse</Link>
+        <Link className="button button-small button-outline" href="/computers">Find a computer</Link>
       </div>
     </header>
   );
